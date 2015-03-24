@@ -24,6 +24,9 @@ from mpl_toolkits.axes_grid1 import make_axes_locatable
 
 
 class Color:
+    """
+    Helper to assign colors to float or integer values mapped to a given range.
+    """
     def __init__(self, scaleMin=None, scaleMax=None):
         self.Nglobal = dict()
         self.cmap = plt.get_cmap('gist_heat')
@@ -56,9 +59,25 @@ class Color:
 
 
 class QuadTree(object):
-    """Simple Quad-tree class"""
+    """
+    Simple quadtree histogram class
+    For a description of quadtree see here: http://en.wikipedia.org/wiki/Quadtree
+    
+    Creates patches based on the quadtree histogram binning and assigns
+    intensity color weighted by the number of localisations falling into
+    the bin and the bin area.
+    
+    See http://dx.doi.org/10.1017/S143192760999122X for additional information
+    on super-resolution data visualisation.
+    """
     def __init__(self, data, eps=10, unitLength=10.0):
-        
+        """
+        eps:        How many points are allowed per bin before it is split
+        unitLength: Minimum edge length that a bin can have. Below this distance
+                    the bin is not divided. Chose to approximately match the
+                    best-case resolution. Further dividing would not be physically
+                    be relevant and/or realistic.
+        """
         if isinstance( data, DataFrame ):
             data = np.array(data[['x','y']])
 
@@ -78,11 +97,18 @@ class QuadTree(object):
         self._run()
     
     def _checkPatch(self, patch):
+        """
+        Divide a patch if it does not meet the given criteria
+        """
         data, (mins, maxs) = patch
         area = (maxs[0] - mins[0]) * (maxs[1] - mins[1])
-        if len(data) < self.eps or area < self.unitArea: # i.e. that would correcpond to a 10 by 10 nm spot
+        # Don't divide the patch further if
+        # (1) number of localisations is below threshold
+        # (2) the area of the patch is below theshold
+        if len(data) < self.eps or area < self.unitArea:
             return [True, ], [(data, (mins, maxs)) ]
         
+        # The old patch boundaries
         xmid, ymid = 0.5 * (mins + maxs)
         xmin, ymin = mins
         xmax, ymax = maxs
@@ -103,36 +129,50 @@ class QuadTree(object):
     
     
     def _run(self):
-
+        """
+        Iteratively divide all patches until all satisfy the stop criterion
+        and are not divided further.
+        """
         i = 0
         while not np.all(self.patchCriterion):
+            # Sanity stop criterion to prevent dead end if something goes wrong
             if i == 1000000:
                 print 'Maximun iterations step reached'
                 break
             i += 1
-            patch = self.patches.pop(0) # take the first element
-            if self.patchCriterion.pop(0) == False:# remove the flag
+            
+            # Take the first element of the list and check it
+            patch = self.patches.pop(0)
+            if self.patchCriterion.pop(0) == False: # Remove the flag
+                # The patch needs to be checked
                 newCriterion, newPatches = self._checkPatch(patch)
             else:
+                # The patch is already small enough
                 newCriterion, newPatches = [True, ], [patch, ]
             
+            # Add the new patches back to the list
             self.patchCriterion.extend(newCriterion)
             self.patches.extend(newPatches)
         
+        # Now every patch satisfies the criterion and we're done.
         return
 
     def setColorBar(self, scaleMin=None, scaleMax=None):
-        # scale is (number of localisations) / (area of the patch)
+        # The color intensity is scaled by (number of localisations) / (area of the patch)
+    
+        # Try to find an optimal auto scaling
         scaleAuto = list()
         for patch, (mins, maxs) in self.patches:
             size = maxs - mins
             area = (maxs[0] - mins[0]) * (maxs[1] - mins[1])
-            N    = float(len(patch)) / area
+            N    = float(len(patch)) / area # This is the "intensity" of the patch
             scaleAuto.append(N)
-            
-        scaleMinAuto = np.percentile(scaleAuto, 5)
-        scaleMaxAuto = np.percentile(scaleAuto, 95)
         
+        # Set the auto-scale boundaries
+        scaleMinAuto = np.percentile(scaleAuto, 5)  # Don't include too much background
+        scaleMaxAuto = np.percentile(scaleAuto, 95) # Try to cut potential fiducials
+        
+        # Was scaleMin or scaleMax set explicitly?
         if scaleMin == None:
             scaleMin = float(scaleMinAuto)
         else:
@@ -145,14 +185,20 @@ class QuadTree(object):
             if scaleMax <= scaleMin:
                 scaleMax = scaleMin * 1.1 # set it 10% above
         
+        # Initialise the color class
         self.color = Color(scaleMin, scaleMax)
     
     def plot(self, scaleMin=None, scaleMax=None, fname=None, show=True):
+        """
+        Generate the quadtree histogram
+        """
+        # Get the colorbar
         if scaleMin == None and scaleMax == None and self.color == None:
             self.setColorBar()
         else:
             self.setColorBar(scaleMin, scaleMax)
         
+        # Set up the figure
         fig = plt.figure(figsize=(7,7))
         ax  = fig.add_subplot(111, axisbg='black')
         ax.set_aspect('equal')
@@ -167,6 +213,9 @@ class QuadTree(object):
         cax = divider.append_axes("right", size="5%", pad=0.05)
         plt.colorbar(sm, cax=cax)
         
+        # Add all the patches to the figure
+        # This might not be the smartest way of doing it and it will
+        # be slow for large histograms with many bins!
         rectangles = list()
         for patch, (mins, maxs) in self.patches:
             size = maxs - mins
@@ -177,6 +226,7 @@ class QuadTree(object):
             rectangles.append(rect)
             ax.add_patch(rect)
         
+        # Save the image to disk and/or show it
         if fname != None:
             fig.savefig(fname, bbox_inches='tight')
         if show:
