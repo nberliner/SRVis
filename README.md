@@ -21,21 +21,22 @@ Visualisation tool for super-resolution localisation data
 5. Run SRVis.py
 
 	```
-		$ python SRVis.py
+	$ python SRVis.py
 	```
 
 ### Troubleshooting ###
 + If running on Kubuntu make sure to do the following (see https://github.com/ContinuumIO/anaconda-issues/issues/32 for more information)
 	1. Put a file qt.conf in your anaconda installation directory, e.g. /home/user/bin/anaconda/bin/ and add the following
+
+		```
+		[Paths]
+		Plugins = '.'
+		```
 	
-	```
-	[Paths]
-	Plugins = '.'
-	```
 	2. Clear the QT_PLUGIN_PATH variable, for example via (note this works only temporarily)
 	
-	```
-	$ export QT_PLUGIN_PATH=""
-	```
-+ I have been running it on a Windows machine. So it can work :) 
+		```
+		$ export QT_PLUGIN_PATH=""
+		```
++ I have been running it on a Windows machine. So it can work :)
 	
