@@ -9,7 +9,6 @@ Visualisation tool for super-resolution localisation data
 	```
 	
 	$ conda update conda
-	
 	$ conda update anaconda
 	```
 3. Make sure the following dependecies are installed
