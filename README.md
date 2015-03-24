@@ -6,20 +6,20 @@ Visualisation tool for super-resolution localisation data
 ### Installation ###
 1. Install Python 2.7 Anaconda (http://docs.continuum.io/anaconda/)
 2. Update the Anaconda installation by running
-```
-	$ conda update conda
-	$ conda update anaconda
-```
+	```
+		$ conda update conda
+		$ conda update anaconda
+	```
 3. Make sure the following dependecies are installed
-```
-	$ conda install pyqt
-	$ conda install -c soft-matter tifffile
-```
+	```
+		$ conda install pyqt
+		$ conda install -c soft-matter tifffile
+	```
 4. Copy the SRVis folder to your computer
 5. Run SRVis.py
-```
-	$ python SRVis.py
-```
+	```
+		$ python SRVis.py
+	```
 
 ### Troubleshooting ###
 + If running on Kubuntu make sure to do the following (see https://github.com/ContinuumIO/anaconda-issues/issues/32 for more information)
