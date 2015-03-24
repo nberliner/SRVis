@@ -1,0 +1,208 @@
+in Input in MultiChannel in ChannelCount in value set 1
+in Input in MultiChannel in Channels in Channel1 in InputMethod in value set FileMethod
+in Input in MultiChannel in Channels in Channel1 in InputMethod in FileMethod in InputFile in value set /home/berliner/03 Spyder/SRVis/example/SRVis_imageData.tif
+in Input in MultiChannel in Channels in Channel1 in InputMethod in FileMethod in FileType in value set 
+in Input in MultiChannel in Channels in Channel1 in InputMethod in FileMethod in FileType in TIFF in IgnoreLibtiffWarnings in value set true
+in Input in MultiChannel in Channels in Channel1 in InputMethod in FileMethod in FileType in TIFF in DetermineFileLength in value set false
+in Input in MultiChannel in Channels in Channel1 in InputMethod in FileMethod in FileType in DummyInput in Width in value set 25
+in Input in MultiChannel in Channels in Channel1 in InputMethod in FileMethod in FileType in DummyInput in Height in value set 50
+in Input in MultiChannel in Channels in Channel1 in InputMethod in FileMethod in FileType in DummyInput in Number in value set 10
+in Input in MultiChannel in Channels in Channel1 in InputMethod in FileMethod in FileType in DummyInput in GoIntType in value set false
+in Input in MultiChannel in Channels in Channel1 in InputMethod in Generated in NoiseGenerator in UpsilonG in value set 0.96
+in Input in MultiChannel in Channels in Channel1 in InputMethod in Generated in NoiseGenerator in UpsilonMu in value set 2734.6
+in Input in MultiChannel in Channels in Channel1 in InputMethod in Generated in NoiseGenerator in UpsilonSigma in value set 104.6
+in Input in MultiChannel in Channels in Channel1 in InputMethod in Generated in NoiseGenerator in UpsilonX0 in value set 2582.6
+in Input in MultiChannel in Channels in Channel1 in InputMethod in Generated in NoiseGenerator in UpsilonTheta in value set 119.7
+in Input in MultiChannel in Channels in Channel1 in InputMethod in Generated in NoiseGenerator in ImageWidth in value set 256
+in Input in MultiChannel in Channels in Channel1 in InputMethod in Generated in NoiseGenerator in ImageHeight in value set 256
+in Input in MultiChannel in Channels in Channel1 in InputMethod in Generated in NoiseGenerator in RandomSeed in value set 1426583738
+in Input in MultiChannel in Channels in Channel1 in InputMethod in Generated in NoiseGenerator in NoiseFile in value set 
+in Input in MultiChannel in Channels in Channel1 in InputMethod in Generated in NoiseGenerator in ScaleVariance in value set 1
+in Input in MultiChannel in Channels in Channel1 in InputMethod in Generated in LayerCount in value set 1
+in Input in MultiChannel in Channels in Channel1 in InputMethod in Generated in Optics in InputLayer0 in PixelSizeInNM in value set 107,107
+in Input in MultiChannel in Channels in Channel1 in InputMethod in Generated in Optics in InputLayer0 in ThreeD in value set Lens3D
+in Input in MultiChannel in Channels in Channel1 in InputMethod in Generated in Optics in InputLayer0 in ThreeD in Lens3D in ZPosition in value set 0
+in Input in MultiChannel in Channels in Channel1 in InputMethod in Generated in Optics in InputLayer0 in CountsPerPhoton in value unset
+in Input in MultiChannel in Channels in Channel1 in InputMethod in Generated in Optics in InputLayer0 in DarkCurrent in value unset
+in Input in MultiChannel in Channels in Channel1 in InputMethod in Generated in Optics in InputLayer0 in Alignment in value set ScaledProjection
+in Input in MultiChannel in Channels in Channel1 in InputMethod in Generated in Optics in InputLayer0 in Alignment in AffineProjection in AlignmentFile in value set 
+in Input in MultiChannel in Channels in Channel1 in InputMethod in Generated in Optics in InputLayer0 in Alignment in SupportPointProjection in SupportPointAlignmentFile in value set 
+in Input in MultiChannel in Channels in Channel1 in InputMethod in Generated in Optics in InputLayer0 in Alignment in SupportPointProjection in SupportPointResolution in value set 10,10
+in Input in MultiChannel in Channels in Channel1 in InputMethod in Generated in Optics in InputLayer0 in Transmission0 in value set 1
+in Input in MultiChannel in Channels in Channel1 in InputMethod in Generated in FluoSetCount in value set 1
+in Input in MultiChannel in Channels in Channel1 in InputMethod in Generated in ImageNumber in value set 10000
+in Input in MultiChannel in Channels in Channel1 in InputMethod in Generated in SampleDepth in value set 1
+in Input in MultiChannel in Channels in Channel1 in InputMethod in Generated in IntegrationTime in value set 0.1
+in Input in MultiChannel in Channels in Channel1 in InputMethod in Generated in SaveActivity in value set 
+in Input in MultiChannel in Channels in Channel1 in InputMethod in Generated in FluorophoreSet1 in Fluorophore in ADCountsPerPhoton in value set 16
+in Input in MultiChannel in Channels in Channel1 in InputMethod in Generated in FluorophoreSet1 in Fluorophore in AverageActivationTime in value set 2
+in Input in MultiChannel in Channels in Channel1 in InputMethod in Generated in FluorophoreSet1 in Fluorophore in AverageDeactivationTime in value set 0.1
+in Input in MultiChannel in Channels in Channel1 in InputMethod in Generated in FluorophoreSet1 in Fluorophore in PhotonEmittanceRate in value set 10000
+in Input in MultiChannel in Channels in Channel1 in InputMethod in Generated in FluorophoreSet1 in Fluorophore in NumericalAperture in value set 0.8
+in Input in MultiChannel in Channels in Channel1 in InputMethod in Generated in FluorophoreSet1 in Fluorophore in RefractiveIndex in value set 1.3
+in Input in MultiChannel in Channels in Channel1 in InputMethod in Generated in FluorophoreSet1 in Fluorophore in Wavelength in value set 500
+in Input in MultiChannel in Channels in Channel1 in InputMethod in Generated in FluorophoreSet1 in FluorophoreDistribution in value set Random
+in Input in MultiChannel in Channels in Channel1 in InputMethod in Generated in FluorophoreSet1 in FluorophoreDistribution in Random in FluorophoreNumber in value set 100
+in Input in MultiChannel in Channels in Channel1 in InputMethod in Generated in FluorophoreSet1 in FluorophoreDistribution in Lattice in LatticeSpacing in value set 40,40,40
+in Input in MultiChannel in Channels in Channel1 in InputMethod in Generated in FluorophoreSet1 in FluorophoreDistribution in Lattice in LatticeBorder in value set 0,0,0
+in Input in MultiChannel in Channels in Channel1 in InputMethod in Generated in FluorophoreSet1 in FluorophoreDistribution in Lines in LineCount in value set 1
+in Input in MultiChannel in Channels in Channel1 in InputMethod in Generated in FluorophoreSet1 in FluorophoreDistribution in Lines in Line0 in StartX in value set 100
+in Input in MultiChannel in Channels in Channel1 in InputMethod in Generated in FluorophoreSet1 in FluorophoreDistribution in Lines in Line0 in StartY in value set 100
+in Input in MultiChannel in Channels in Channel1 in InputMethod in Generated in FluorophoreSet1 in FluorophoreDistribution in Lines in Line0 in StartZ in value set 0
+in Input in MultiChannel in Channels in Channel1 in InputMethod in Generated in FluorophoreSet1 in FluorophoreDistribution in Lines in Line0 in Angle in value set 0
+in Input in MultiChannel in Channels in Channel1 in InputMethod in Generated in FluorophoreSet1 in FluorophoreDistribution in Lines in Line0 in AngleZ in value set 0
+in Input in MultiChannel in Channels in Channel1 in InputMethod in Generated in FluorophoreSet1 in FluorophoreDistribution in Lines in Line0 in Density in value set 40
+in Input in MultiChannel in Channels in Channel1 in InputMethod in Generated in FluorophoreSet1 in FluorophoreDistribution in Lines in Line0 in XSpacing in value set 0
+in Input in MultiChannel in Channels in Channel1 in InputMethod in Generated in FluorophoreSet1 in FluorophoreDistribution in Lines in Line0 in YSpacing in value set 500
+in Input in MultiChannel in Channels in Channel1 in InputMethod in Generated in FluorophoreSet1 in FluorophoreDistribution in Lines in Line0 in ZSpacing in value set 0
+in Input in MultiChannel in Channels in Channel1 in InputMethod in Generated in FluorophoreSet1 in FluorophoreDistribution in Lines in Line0 in MaxPerLine in value set 0
+in Input in MultiChannel in Channels in Channel1 in InputMethod in Generated in FluorophoreSet1 in FluorophoreDistribution in Lines in Line0 in Repeat in value set 1
+in Input in MultiChannel in Channels in Channel1 in InputMethod in Generated in FluorophoreSet1 in StoreFluorophores in value set 
+in Input in MultiChannel in Channels in Channel1 in InputMethod in Generated in FluorophoreSet1 in RecallFluorophores in value set 
+in Input in MultiChannel in Channels in Channel1 in InputMethod in Generated in FluorophoreSet1 in FluorophoreIndex in value set 0
+in Input in MultiChannel in Channels in Channel1 in InputMethod in AndorDirectConfig in AimCamera in value set 0
+in Input in MultiChannel in Channels in Channel1 in InputMethod in AndorDirectConfig in ViewCamera in value set 0
+in Input in MultiChannel in Channels in Channel1 in InputMethod in AndorDirectConfig in ShowLiveByDefault in value set true
+in Input in MultiChannel in Channels in Channel1 in ROIFilter in FirstImage in value set 0
+in Input in MultiChannel in Channels in Channel1 in ROIFilter in LastImage in value unset
+in Input in MultiChannel in Channels in Channel1 in Mirror in MirrorY in value set false
+in Input in MultiChannel in JoinOn in value set Spatialz
+in Input in BiplaneSplitter in DualView in value set None
+in Input in PlaneFilter in OnlyPlane in value set AllPlanes
+in Input in OutputBasename in Basename in value set /home/berliner/03 Spyder/SRVis/example/SRVis_imageData.tif
+in Input in SampleInfo in FluorophoreCount in value set 1
+in Input in Optics in InputLayer0 in PixelSizeInNM in value set 100,100
+in Input in Optics in InputLayer0 in ThreeD in value set No3D
+in Input in Optics in InputLayer0 in ThreeD in No3D in PSF in value set 190,190
+in Input in Optics in InputLayer0 in ThreeD in Spline3D in ZCalibration in value set 
+in Input in Optics in InputLayer0 in ThreeD in Polynomial3D in SharpestPSF in value set 500,500
+in Input in Optics in InputLayer0 in ThreeD in Polynomial3D in ZPosition in value set 0,0
+in Input in Optics in InputLayer0 in ThreeD in Polynomial3D in WideningConstants in value set 0 0 0 0,0 0 0 0
+in Input in Optics in InputLayer0 in ThreeD in Polynomial3D in ZRange in value set 1000,1000
+in Input in Optics in InputLayer0 in CountsPerPhoton in value set 8.9
+in Input in Optics in InputLayer0 in DarkCurrent in value set 100
+in Input in Optics in InputLayer0 in Alignment in value set ScaledProjection
+in Input in Optics in InputLayer0 in Alignment in AffineProjection in AlignmentFile in value set 
+in Input in Optics in InputLayer0 in Alignment in SupportPointProjection in SupportPointAlignmentFile in value set 
+in Input in Optics in InputLayer0 in Alignment in SupportPointProjection in SupportPointResolution in value set 10,10
+in Input in Optics in InputLayer0 in Transmission0 in value set 1
+in Engine in rapidSTORM in NonMaximumSuppression in value set 2,2
+in Engine in rapidSTORM in FitJudgingMethod in value set SquareRootRatio
+in Engine in rapidSTORM in FitJudgingMethod in FixedThreshold in AmplitudeThreshold in value set 1000
+in Engine in rapidSTORM in FitJudgingMethod in SquareRootRatio in SNR in value set 40
+in Engine in rapidSTORM in SpotFindingMethod in value set Average
+in Engine in rapidSTORM in SpotFindingMethod in Average in SmoothingMaskSize in value set 2
+in Engine in rapidSTORM in SpotFindingMethod in Median in SmoothingMaskSize in value set 5
+in Engine in rapidSTORM in SpotFindingMethod in Erosion in SmoothingMaskSize in value set 3
+in Engine in rapidSTORM in SpotFindingMethod in Gaussian in SmoothingSigma in value set 1,1
+in Engine in rapidSTORM in SpotFindingMethod in DifferenceOfAverage in ForegroundMaskSize in value set 5
+in Engine in rapidSTORM in SpotFindingMethod in DifferenceOfAverage in BackgroundMaskSize in value set 15
+in Engine in rapidSTORM in SpotFittingMethod in value set GUF
+in Engine in rapidSTORM in SpotFittingMethod in GUF in FitWindowSize in value set 600
+in Engine in rapidSTORM in SpotFittingMethod in GUF in DisjointFitting in value set true
+in Engine in rapidSTORM in SpotFittingMethod in GUF in DoublePrecision in value set true
+in Engine in rapidSTORM in SpotFittingMethod in GUF in MarquardtStartLambda in value set 100
+in Engine in rapidSTORM in SpotFittingMethod in GUF in NegligibleStepLength in value set 0.01
+in Engine in rapidSTORM in SpotFittingMethod in GUF in RelativeFitEpsilon in value set 0.001
+in Engine in rapidSTORM in SpotFittingMethod in GUF in MaximumIterationSteps in value set 25
+in Engine in rapidSTORM in SpotFittingMethod in GUF in FreeSigmaFitting in value set false
+in Engine in rapidSTORM in SpotFittingMethod in GUF in OutputSigmas in value set false
+in Engine in rapidSTORM in SpotFittingMethod in GUF in LaempiPosition in value set false
+in Engine in rapidSTORM in SpotFittingMethod in GUF in LaempiAmplitudes in value set false
+in Engine in rapidSTORM in SpotFittingMethod in GUF in TwoKernelFitting in value set false
+in Engine in rapidSTORM in SpotFittingMethod in GUF in ThetaDist in value set 500
+in Engine in rapidSTORM in SpotFittingMethod in GUF in MLEFitting in value set true
+in Engine in rapidSTORM in Motivation in value set 3
+in CPUNumber in value set 8
+in Output in EngineOutput in ChooseTransmission in value set Count
+in Output in EngineOutput in Output0 in Count in ToFile in value set 
+in Output in EngineOutput in Output0 in Count in RemoveOutput in value set 0
+in Output in EngineOutput in ChooseTransmission in value set Progress
+in Output in EngineOutput in Output1 in Progress in RemoveOutput in value set 0
+in Output in EngineOutput in ChooseTransmission in value set Cache
+in Output in EngineOutput in Output2 in Cache in RemoveOutput in value set 0
+in Output in EngineOutput in Output2 in Cache in ChooseTransmission in value set Expression
+in Output in EngineOutput in Output2 in Cache in Output0 in Expression in LowerAmplitudeThreshold in value unset
+in Output in EngineOutput in Output2 in Cache in Output0 in Expression in LinearDriftCorrection in value unset
+in Output in EngineOutput in Output2 in Cache in Output0 in Expression in TwoKernelImprovement in value set 1
+in Output in EngineOutput in Output2 in Cache in Output0 in Expression in ExpressionCount in value set 1
+in Output in EngineOutput in Output2 in Cache in Output0 in Expression in CommandLine0 in LValue in value set expression
+in Output in EngineOutput in Output2 in Cache in Output0 in Expression in CommandLine0 in Expression in value set 
+in Output in EngineOutput in Output2 in Cache in Output0 in Expression in RemoveOutput in value set 0
+in Output in EngineOutput in Output2 in Cache in Output0 in Expression in ChooseTransmission in value set Image
+in Output in EngineOutput in Output2 in Cache in Output0 in Expression in Output0 in Image in ToFile in value set /home/berliner/03 Spyder/SRVis/example/SRVis_imageData.tif.png
+in Output in EngineOutput in Output2 in Cache in Output0 in Expression in Output0 in Image in SaveWithKey in value set true
+in Output in EngineOutput in Output2 in Cache in Output0 in Expression in Output0 in Image in SaveScaleBar in value set true
+in Output in EngineOutput in Output2 in Cache in Output0 in Expression in Output0 in Image in ShowOutput in value set true
+in Output in EngineOutput in Output2 in Cache in Output0 in Expression in Output0 in Image in DimensionSelector in XDimension in value set PositionX
+in Output in EngineOutput in Output2 in Cache in Output0 in Expression in Output0 in Image in DimensionSelector in XDimension in PositionX in XResolution in value set 10
+in Output in EngineOutput in Output2 in Cache in Output0 in Expression in Output0 in Image in DimensionSelector in XDimension in PositionUncertaintyX in XResolution in value set 10
+in Output in EngineOutput in Output2 in Cache in Output0 in Expression in Output0 in Image in DimensionSelector in XDimension in PositionY in XResolution in value set 10
+in Output in EngineOutput in Output2 in Cache in Output0 in Expression in Output0 in Image in DimensionSelector in XDimension in PositionUncertaintyY in XResolution in value set 10
+in Output in EngineOutput in Output2 in Cache in Output0 in Expression in Output0 in Image in DimensionSelector in XDimension in PositionZ in XResolution in value set 10
+in Output in EngineOutput in Output2 in Cache in Output0 in Expression in Output0 in Image in DimensionSelector in XDimension in PositionUncertaintyZ in XResolution in value set 10
+in Output in EngineOutput in Output2 in Cache in Output0 in Expression in Output0 in Image in DimensionSelector in XDimension in ImageNumber in XResolution in value set 10
+in Output in EngineOutput in Output2 in Cache in Output0 in Expression in Output0 in Image in DimensionSelector in XDimension in Amplitude in XResolution in value set 10
+in Output in EngineOutput in Output2 in Cache in Output0 in Expression in Output0 in Image in DimensionSelector in XDimension in PSFWidthX in XResolution in value set 10
+in Output in EngineOutput in Output2 in Cache in Output0 in Expression in Output0 in Image in DimensionSelector in XDimension in PSFWidthY in XResolution in value set 10
+in Output in EngineOutput in Output2 in Cache in Output0 in Expression in Output0 in Image in DimensionSelector in XDimension in TwoKernelImprovement in XResolution in value set 10
+in Output in EngineOutput in Output2 in Cache in Output0 in Expression in Output0 in Image in DimensionSelector in XDimension in FitResidues in XResolution in value set 10
+in Output in EngineOutput in Output2 in Cache in Output0 in Expression in Output0 in Image in DimensionSelector in XDimension in Fluorophore in XResolution in value set 10
+in Output in EngineOutput in Output2 in Cache in Output0 in Expression in Output0 in Image in DimensionSelector in XDimension in LocalBackground in XResolution in value set 10
+in Output in EngineOutput in Output2 in Cache in Output0 in Expression in Output0 in Image in DimensionSelector in YDimension in value set PositionY
+in Output in EngineOutput in Output2 in Cache in Output0 in Expression in Output0 in Image in DimensionSelector in YDimension in PositionX in YResolution in value set 10
+in Output in EngineOutput in Output2 in Cache in Output0 in Expression in Output0 in Image in DimensionSelector in YDimension in PositionUncertaintyX in YResolution in value set 10
+in Output in EngineOutput in Output2 in Cache in Output0 in Expression in Output0 in Image in DimensionSelector in YDimension in PositionY in YResolution in value set 10
+in Output in EngineOutput in Output2 in Cache in Output0 in Expression in Output0 in Image in DimensionSelector in YDimension in PositionUncertaintyY in YResolution in value set 10
+in Output in EngineOutput in Output2 in Cache in Output0 in Expression in Output0 in Image in DimensionSelector in YDimension in PositionZ in YResolution in value set 10
+in Output in EngineOutput in Output2 in Cache in Output0 in Expression in Output0 in Image in DimensionSelector in YDimension in PositionUncertaintyZ in YResolution in value set 10
+in Output in EngineOutput in Output2 in Cache in Output0 in Expression in Output0 in Image in DimensionSelector in YDimension in ImageNumber in YResolution in value set 10
+in Output in EngineOutput in Output2 in Cache in Output0 in Expression in Output0 in Image in DimensionSelector in YDimension in Amplitude in YResolution in value set 10
+in Output in EngineOutput in Output2 in Cache in Output0 in Expression in Output0 in Image in DimensionSelector in YDimension in PSFWidthX in YResolution in value set 10
+in Output in EngineOutput in Output2 in Cache in Output0 in Expression in Output0 in Image in DimensionSelector in YDimension in PSFWidthY in YResolution in value set 10
+in Output in EngineOutput in Output2 in Cache in Output0 in Expression in Output0 in Image in DimensionSelector in YDimension in TwoKernelImprovement in YResolution in value set 10
+in Output in EngineOutput in Output2 in Cache in Output0 in Expression in Output0 in Image in DimensionSelector in YDimension in FitResidues in YResolution in value set 10
+in Output in EngineOutput in Output2 in Cache in Output0 in Expression in Output0 in Image in DimensionSelector in YDimension in Fluorophore in YResolution in value set 10
+in Output in EngineOutput in Output2 in Cache in Output0 in Expression in Output0 in Image in DimensionSelector in YDimension in LocalBackground in YResolution in value set 10
+in Output in EngineOutput in Output2 in Cache in Output0 in Expression in Output0 in Image in DimensionSelector in ZDimension in value set PositionZ
+in Output in EngineOutput in Output2 in Cache in Output0 in Expression in Output0 in Image in DimensionSelector in ZDimension in PositionX in ZResolution in value set 10
+in Output in EngineOutput in Output2 in Cache in Output0 in Expression in Output0 in Image in DimensionSelector in ZDimension in PositionUncertaintyX in ZResolution in value set 10
+in Output in EngineOutput in Output2 in Cache in Output0 in Expression in Output0 in Image in DimensionSelector in ZDimension in PositionY in ZResolution in value set 10
+in Output in EngineOutput in Output2 in Cache in Output0 in Expression in Output0 in Image in DimensionSelector in ZDimension in PositionUncertaintyY in ZResolution in value set 10
+in Output in EngineOutput in Output2 in Cache in Output0 in Expression in Output0 in Image in DimensionSelector in ZDimension in PositionZ in ZResolution in value set 10
+in Output in EngineOutput in Output2 in Cache in Output0 in Expression in Output0 in Image in DimensionSelector in ZDimension in PositionUncertaintyZ in ZResolution in value set 10
+in Output in EngineOutput in Output2 in Cache in Output0 in Expression in Output0 in Image in DimensionSelector in ZDimension in ImageNumber in ZResolution in value set 10
+in Output in EngineOutput in Output2 in Cache in Output0 in Expression in Output0 in Image in DimensionSelector in ZDimension in Amplitude in ZResolution in value set 10
+in Output in EngineOutput in Output2 in Cache in Output0 in Expression in Output0 in Image in DimensionSelector in ZDimension in PSFWidthX in ZResolution in value set 10
+in Output in EngineOutput in Output2 in Cache in Output0 in Expression in Output0 in Image in DimensionSelector in ZDimension in PSFWidthY in ZResolution in value set 10
+in Output in EngineOutput in Output2 in Cache in Output0 in Expression in Output0 in Image in DimensionSelector in ZDimension in TwoKernelImprovement in ZResolution in value set 10
+in Output in EngineOutput in Output2 in Cache in Output0 in Expression in Output0 in Image in DimensionSelector in ZDimension in FitResidues in ZResolution in value set 10
+in Output in EngineOutput in Output2 in Cache in Output0 in Expression in Output0 in Image in DimensionSelector in ZDimension in Fluorophore in ZResolution in value set 10
+in Output in EngineOutput in Output2 in Cache in Output0 in Expression in Output0 in Image in DimensionSelector in ZDimension in LocalBackground in ZResolution in value set 10
+in Output in EngineOutput in Output2 in Cache in Output0 in Expression in Output0 in Image in DimensionSelector in IDimension in value set Amplitude
+in Output in EngineOutput in Output2 in Cache in Output0 in Expression in Output0 in Image in DimensionSelector in InvertYAxis in value set false
+in Output in EngineOutput in Output2 in Cache in Output0 in Expression in Output0 in Image in DimensionSelector in ThreeDImage in value set false
+in Output in EngineOutput in Output2 in Cache in Output0 in Expression in Output0 in Image in Interpolator in value set Linear
+in Output in EngineOutput in Output2 in Cache in Output0 in Expression in Output0 in Image in Interpolator in GaussianSmoothing in SmoothingFactor in value set 1
+in Output in EngineOutput in Output2 in Cache in Output0 in Expression in Output0 in Image in Interpolator in GaussianSmoothing in Range in value set 3
+in Output in EngineOutput in Output2 in Cache in Output0 in Expression in Output0 in Image in Border in value set 0,0,0
+in Output in EngineOutput in Output2 in Cache in Output0 in Expression in Output0 in Image in HistogramPower in value set 0.3
+in Output in EngineOutput in Output2 in Cache in Output0 in Expression in Output0 in Image in IntensityCutoff in value set 1
+in Output in EngineOutput in Output2 in Cache in Output0 in Expression in Output0 in Image in ColourScheme in value set BlackRedYellowWhite
+in Output in EngineOutput in Output2 in Cache in Output0 in Expression in Output0 in Image in ColourScheme in FixedHue in Hue in value set 0
+in Output in EngineOutput in Output2 in Cache in Output0 in Expression in Output0 in Image in ColourScheme in FixedHue in Saturation in value set 1
+in Output in EngineOutput in Output2 in Cache in Output0 in Expression in Output0 in Image in ColourScheme in ByCoordinate in HueCoordinate in value set PositionX
+in Output in EngineOutput in Output2 in Cache in Output0 in Expression in Output0 in Image in ColourScheme in ByCoordinate in HueRange in value set 0.666
+in Output in EngineOutput in Output2 in Cache in Output0 in Expression in Output0 in Image in InvertColours in value set false
+in Output in EngineOutput in Output2 in Cache in Output0 in Expression in Output0 in Image in CloseOnCompletion in value set true
+in Output in EngineOutput in Output2 in Cache in Output0 in Expression in Output0 in Image in ScaleBarLength in value set 5
+in Output in EngineOutput in Output2 in Cache in Output0 in Expression in Output0 in Image in RemoveOutput in value set 0
+in Output in EngineOutput in Output2 in Cache in Output0 in Expression in ChooseTransmission in value set Table
+in Output in EngineOutput in Output2 in Cache in Output0 in Expression in Output1 in Table in ToFile in value set /home/berliner/03 Spyder/SRVis/example/SRVis_imageData.tif.txt
+in Output in EngineOutput in Output2 in Cache in Output0 in Expression in Output1 in Table in XYZTI in value set false
+in Output in EngineOutput in Output2 in Cache in Output0 in Expression in Output1 in Table in RemoveOutput in value set 0
+in Output in EngineOutput in Output2 in Cache in Output0 in Expression in ChooseTransmission in value set 
+in Output in EngineOutput in Output2 in Cache in ChooseTransmission in value set 
+in Output in EngineOutput in ChooseTransmission in value set 
+in Output in SaveConfigFile in value set /home/berliner/03 Spyder/SRVis/example/SRVis_imageData.tif-settings.txt
+in AutoTerminate in value set false
