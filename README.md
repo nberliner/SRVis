@@ -7,7 +7,9 @@ Visualisation tool for super-resolution localisation data
 1. Install Python 2.7 Anaconda (http://docs.continuum.io/anaconda/)
 2. Update the Anaconda installation by running
 	```
+	
 	$ conda update conda
+	
 	$ conda update anaconda
 	```
 3. Make sure the following dependecies are installed
