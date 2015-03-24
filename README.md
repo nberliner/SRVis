@@ -9,5 +9,8 @@ Visualisation tool for super-resolution localisation data
 3. Run SRVis.py
 
 ### Troubleshooting ###
-+ If running on Kubuntu make sure to clear the QT_PLUGIN_PATH variable
-	$ export QT_PLUGIN_PATH=""
++ If running on Kubuntu make sure to clear the QT_PLUGIN_PATH variable via
+```
+	user@machine:~/$ export QT_PLUGIN_PATH=""
+```
+	
