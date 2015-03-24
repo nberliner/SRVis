@@ -32,5 +32,5 @@ Visualisation tool for super-resolution localisation data
 	```
 		$ export QT_PLUGIN_PATH=""
 	```
-+ I have been running it on a Windows machine. So it can work :)
++ I have been running it on a Windows machine. So it can work :) 
 	
