@@ -171,11 +171,11 @@ def readRapidStormLocalisations(fname, photonConversion=1.0, pixelSize=1.0):
 
 def readXYTLocalisations(fname, pixelSize=1.0):
     """
-    Read a generic xyt file. The columns must be:
+    Read a generic xyt file. The following columns must be present (case sensitive!):
     
             x   y   frame
     
-    The first line is skipped as header information.
+    The first line is used as header information.
     """
     # Read the data
     allData  = np.loadtxt(fname, skiprows=1)
@@ -189,7 +189,8 @@ def readXYTLocalisations(fname, pixelSize=1.0):
     index  = [ level1, level2 ]
     
     # Put the data together
-    data = DataFrame(allData, columns=['x','y','frame'], index=index)
+#    data = DataFrame(allData, columns=['x','y','frame'], index=index)
+    data = DataFrame(allData, index=index)
     
     # Convert x and y data to pixels
     data[['x','y']] = data[['x','y']] / float(pixelSize)

@@ -133,12 +133,9 @@ class localisations():
         else: # we should never reach this point
             return 'Warning: DataType not understood!'
     
-    def readFile(self, fname):
+    def readFile(self, fname): # implement in child class to adapt to input format
         pass
-    
-    def writeToFile(self, fname, dataType=None):
-        pass
-    
+        
     def numberOfLocalisations(self, dataType=None):
         return len(self.localisations(dataType=dataType))
 
@@ -230,15 +227,6 @@ class localisations():
         self.filtered = True # set the filtered flag
         return
 
-
-class rapidstormLocalisations(localisations):
-    
-    def __init__(self):
-        localisations.__init__(self)
-
-    def readFile(self, fname, photonConversion=1.0, pixelSize=1.0):
-        self.data = readRapidStormLocalisations(fname, photonConversion, pixelSize)
-    
     def writeToFile(self, fname, dataType=None, pixelSize=1.0):
         if dataType == None:
             data = self.localisations()
@@ -255,10 +243,18 @@ class rapidstormLocalisations(localisations):
 
         try:
             data[['x','y']] = data[['x','y']] * float(pixelSize)
-            data.to_csv(fname, sep='\t', columns=['x','y','frame'], index=False)
+#            data.to_csv(fname, sep='\t', columns=['x','y','frame'], index=False)
+            data.to_csv(fname, sep='\t', index=False)
         except:
-            with open(fname, 'w') as f:
-                f.write('Sorry, data not available.')
+            print 'Sorry, could not write the data to disk!'
+
+class rapidstormLocalisations(localisations):
+    
+    def __init__(self):
+        localisations.__init__(self)
+
+    def readFile(self, fname, photonConversion=1.0, pixelSize=1.0):
+        self.data = readRapidStormLocalisations(fname, photonConversion, pixelSize)
             
     def frame(self, frame):
         assert( isinstance(frame, int) )
@@ -271,10 +267,19 @@ class rapidstormLocalisations(localisations):
 
 
 class XYTLocalisations(localisations):
+    """
+    
+    Load generic localisation files
+    
+    """
     def __init__(self):
         localisations.__init__(self)
 
     def readFile(self, fname, pixelSize):
+        """
+        The first row is used as header information, the following columns must
+        be present: 'x', 'y', and 'frame' (note: this is case sensitive!)
+        """
         self.data = readXYTLocalisations(fname, pixelSize=pixelSize)
 
 
