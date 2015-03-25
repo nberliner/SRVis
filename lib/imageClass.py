@@ -68,7 +68,7 @@ class imageHistogramWidget(MyMatplotlibWidget):
     def __init__(self, data, title='Title', parent=None):
         
         super(imageHistogramWidget, self).__init__(parent=parent, aspect='equal')
-        self.toolbar = NavigationToolbar(self, self)
+        self.toolbar = NavigationToolbar(self, self) # Why do I have to add it here again??
         
         assert(np.shape(data)[1] == 2)
         
@@ -81,13 +81,19 @@ class imageHistogramWidget(MyMatplotlibWidget):
         self.scaleMin = None
         self.scaleMax = None
         
+        self.im       = None
+        self.colorbar = None
+        
         self.get2DHistogram = ImageHistogram()   
     
     def setData(self, data):
         self.data = data
     
     def redraw(self):
-        self.draw()
+#        self.draw()
+        self.toolbar.dynamic_update() # This seems to slightly faster than self.draw()
+
+        
     
     def calculate2DHistogram(self, scaleMin, scaleMax, binSize=1):
         self.H, self.extent, self.sm, scaleMin, scaleMax = self.get2DHistogram(self.data, scaleMin, scaleMax, binSize)
@@ -98,16 +104,25 @@ class imageHistogramWidget(MyMatplotlibWidget):
             self.binSize = binSize
             self.scaleMin, self.scaleMax = self.calculate2DHistogram(scaleMin, scaleMax, binSize=binSize)
 
-        self.fig.clf(keep_observers=True)
-        self.axes = self.fig.add_subplot(111)
-        self.axes.clear()
-        im = self.axes.imshow(self.H, extent=self.extent, interpolation='nearest', cmap='gist_heat')
-        norm = matplotlib.colors.Normalize(vmin=self.scaleMin, vmax=self.scaleMax)
-        im.set_norm(norm)
 
+        if self.colorbar != None:
+            # Thanks to: http://stackoverflow.com/a/5265614
+            self.fig.delaxes(self.fig.axes[1])
+            self.fig.subplots_adjust(right=0.90)
+
+        # In order to keep the pan/zoom after updating the image is kept
+        # and only the data is updated after the first image has been plotted.
+        if self.im == None:
+            self.im = self.axes.imshow(self.H, extent=self.extent, interpolation='nearest', cmap='gist_heat')
+        else:
+            self.im.set_data(self.H)
+        norm = matplotlib.colors.Normalize(vmin=self.scaleMin, vmax=self.scaleMax)
+        self.im.set_norm(norm)
+
+        # Add a colorbar to the image
         divider = make_axes_locatable(self.axes)
         cax = divider.append_axes("right", size="5%", pad=0.05)
-        self.fig.colorbar(self.sm, cax=cax)
+        self.colorbar = self.fig.colorbar(self.sm, cax=cax)
         
         
 

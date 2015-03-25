@@ -404,7 +404,7 @@ class SRVis(QWidget):
 #        baseDirectory = './example/'
 #        fileNameImage = baseDirectory + 'SRVis_imageData.tif'
 #        fnameLocalisations = baseDirectory + 'SRVis_imageData.txt'
-#        
+        
         
         self.fileNameImage          = fileNameImage
         self.fnameLocalisations     = fnameLocalisations
