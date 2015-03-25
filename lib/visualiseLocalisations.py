@@ -245,12 +245,16 @@ class ImageHistogram(object):
         
         X = data[:,0]
         Y = data[:,1]
+        
+        # Calculate how many bins are needed to reach binSize for each bin
         binsX = np.ceil(((np.max(X)) - np.min(X)) / float(binSize))
         binsY = np.ceil(((np.max(Y)) - np.min(Y)) / float(binSize))
         
+        # Compute the 2D histogram
         H, xedges, yedges = np.histogram2d(X, Y, bins=(binsX,binsY))
-        extent = [yedges[0], yedges[-1], xedges[-1], xedges[0]]
+        extent = [yedges[0], yedges[-1], xedges[-1], xedges[0]] # the boundaries of the histogram
         
+        # Get the color class used to add the colorbar to the histogram
         if scaleMin == None and scaleMax == None:
             color, scaleMin, scaleMax = self._setColorBar(H)
         else:
@@ -266,9 +270,11 @@ class ImageHistogram(object):
         
     
     def _setColorBar(self, H, scaleMin=None, scaleMax=None):
+        # Try to find an optimal auto scaling
         scaleMinAuto = np.percentile(H[::-1], 5)
         scaleMaxAuto = np.percentile(H[::-1], 98)
 
+        # Was scaleMin or scaleMax set explicitly?
         if scaleMin == None:
             scaleMin = float(scaleMinAuto)
         else:
@@ -281,6 +287,7 @@ class ImageHistogram(object):
             if scaleMax <= scaleMin:
                 scaleMax = scaleMin * 1.1 # set it 10% above
         
+        # Initialise the color class
         color = Color(scaleMin, scaleMax)
         return color, scaleMin, scaleMax
 

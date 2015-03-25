@@ -25,6 +25,12 @@ from localisationClass import rapidstormLocalisations, XYTLocalisations
 #from visualiseLocalisations import QuadTree
 
 class dataHandler():
+    """
+    Interface between the data and the SRVis application
+    
+    The super-resolution data is stored in a pandas DataFrame and the TIFF image
+    is read using tifffile.py (see http://www.lfd.uci.edu/~gohlke/code/tifffile.py.html)
+    """
     def __init__(self, fnameImage, fnameLocalisations, fnameLocalisationsType, pixelSize, CpPh, eps=50):
 
         if fnameImage == None or fnameImage == '':
@@ -34,6 +40,7 @@ class dataHandler():
             self.image         = Tiff.TiffFile(fnameImage)
         
         print 'Reading the localisations'
+        # Here other localisation data types can be added if desired
         if fnameLocalisationsType == 'rapidstorm':
             self.data = rapidstormLocalisations()
             self.data.readFile(fnameLocalisations, photonConversion=CpPh, pixelSize=pixelSize)
@@ -49,22 +56,32 @@ class dataHandler():
         return self.image[frame].asarray()
         
     def maxImageFrame(self):
+        """ Returns the number of frames """
         if self.image == None:
             return 0
         else:
             return len(self.image)
         
     def getLocalisations(self, frame):
-        """ Return X and Y localisation data that can be directly
-        used in a matplotlib scatter plot """
+        """ Return X and Y localisation data as numpy arrays that can be 
+        directly used in a matplotlib scatter plot """
         data = self.data.localisations()
         xy   = np.asarray(data[ data['frame'] == frame ][['x','y']])
         return xy[:,0], xy[:,1]
     
     def filterData(self, filterValues):
+        """ Filter the localisation data based on the filter conditions in
+        filterValues.
+        
+        filterValues must be a dict with dataType that should be filtered as
+        keys and the min and max values as values, i.e. e.g.
+            filterValues = dict()
+            filterValues['SNR'] = (20, None)
+        """
         self.data.filterAll(filterValues, relative=False)
     
     def saveLocalisations(self, fname, pxSize):
+        """ Save the (filtered) localisations to disk """
         self.data.writeToFile(fname, pixelSize=pxSize)
 
 
