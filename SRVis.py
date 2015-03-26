@@ -94,6 +94,7 @@ class SRVis(QWidget):
         # Add the left-right splitter         
         self.layoutWindow   = QWidget()
         self.leftPaneWindow = QWidget()
+        self.leftPaneWindow.setMaximumWidth(300) # restrict it to not grow too wide
         
         self.layoutWindow.setLayout(self.layout)
         self.leftPaneWindow.setLayout(self.leftPane)
@@ -103,10 +104,11 @@ class SRVis(QWidget):
 
         self.outerLayout.addWidget(self.splitterLeftRight)
         
-        
+
         # Create the left pane holding input fields
         self.form_layout  = QFormLayout()
         self.form_layout2 = QFormLayout()
+        
 
         self.frame        = QSpinBox(self)
         self.markerSize   = QLineEdit(self)
