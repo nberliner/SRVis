@@ -28,13 +28,21 @@ matplotlib.use('Qt4Agg')
 matplotlib.rcParams['backend.qt4']='PyQt4'
  
 from matplotlib.backends.backend_qt4agg import FigureCanvasQTAgg as FigureCanvas
-from matplotlib.backends.backend_qt4agg import NavigationToolbar2QT as NavigationToolbar
+#from matplotlib.backends.backend_qt4agg import NavigationToolbar2QT as NavigationToolbar
+from matplotlib.backends.backend_qt4agg import NavigationToolbar2QT
 
 
 from matplotlib.figure import Figure
 from mpl_toolkits.axes_grid1 import make_axes_locatable
 
 from visualiseLocalisations import ImageHistogram
+
+
+class NavigationToolbar(NavigationToolbar2QT):
+    # Thanks to: http://stackoverflow.com/a/15549675
+    # only display the buttons we need
+    toolitems = [t for t in NavigationToolbar2QT.toolitems if
+                 t[0] in ('Home', 'Pan', 'Zoom', 'Save')]
 
 
 class MyMatplotlibWidget(FigureCanvas):
