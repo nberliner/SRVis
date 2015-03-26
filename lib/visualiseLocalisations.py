@@ -243,8 +243,10 @@ class ImageHistogram(object):
     
     def __call__(self, data, scaleMin=None, scaleMax=None, binSize=1):
         
-        X = data[:,0]
-        Y = data[:,1]
+        # From the docs we read "Values in x are histogrammed along the first dimension"
+        # so we flip around to make it comparable to the image.
+        X = data[:,1]
+        Y = data[:,0]
         
         # Calculate how many bins are needed to reach binSize for each bin
         binsX = np.ceil(((np.max(X)) - np.min(X)) / float(binSize))
