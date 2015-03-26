@@ -22,14 +22,14 @@ from PyQt4.QtGui  import *
 import os.path as osp
 
 
-class openDialog(QWidget):
+class openDialog(QDialog):
     
     sendHome = Signal(str)
     
     def __init__(self, parent=None):
-        QWidget.__init__(self)
+        QWidget.__init__(self, parent)
         
-        self.parent = parent
+        self.mainWindow = parent
         self.resize(500, 150)
         self.setWindowTitle('Load new data')
         
@@ -104,7 +104,7 @@ class openDialog(QWidget):
         self.openButton  = QPushButton('&Open', self)
         self.openButton.clicked.connect(self.clickedOpen)
         self.closeButton = QPushButton('&Cancel', self)
-        self.closeButton.clicked.connect(self.close)
+        self.closeButton.clicked.connect(self.reject)
         
         self.buttonLayout.addWidget(self.openButton)
         self.buttonLayout.addWidget(self.closeButton)
@@ -159,7 +159,7 @@ class openDialog(QWidget):
             CpPh = int(self.CountsPerPhoton.text())
 
         self.close() # check if this works..
-        self.parent.showData(fileNameImage, fnameLocalisations, fnameLocalisationsType, pxSize, CpPh)
+        self.mainWindow.showData(fileNameImage, fnameLocalisations, fnameLocalisationsType, pxSize, CpPh)
 
         self.sendHome.emit(self.home)
 
