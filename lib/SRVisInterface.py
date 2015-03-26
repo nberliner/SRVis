@@ -21,6 +21,15 @@ from PyQt4.QtGui  import *
 
 import os.path as osp
 
+class messageBox(QMessageBox):
+    
+    def __init__(self, parent=None):
+        
+        super(messageBox, self).__init__(parent)
+    
+    def print_message(self, msg):
+        
+        self.setText("Test Message")
 
 class openDialog(QDialog):
     
@@ -134,6 +143,7 @@ class openDialog(QDialog):
         return
 
     def clickedOpen(self):
+        self.mainWindow.statusBusy('Loading data..')
         fileNameImage      = str(self.ImagePath.text())
         fnameLocalisations = str(self.LocalisationPath.text())
         
@@ -162,6 +172,7 @@ class openDialog(QDialog):
         self.mainWindow.showData(fileNameImage, fnameLocalisations, fnameLocalisationsType, pxSize, CpPh)
 
         self.sendHome.emit(self.home)
+        self.mainWindow.statusReady()
 
 
 

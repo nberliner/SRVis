@@ -37,14 +37,10 @@ matplotlib.rcParams['backend.qt4']='PyQt4'
 # Import program specific classes and functions
 from dataHandler    import dataHandler
 from imageClass     import overlayWidget, dataWidget, imageHistogramWidget
-from SRVisInterface import openDialog, PyMultiPageWidget
+from SRVisInterface import openDialog, PyMultiPageWidget, messageBox
 
 
-qt_app = QApplication(sys.argv)
-
-
-
-class SRVis(QWidget):
+class SRVis(QMainWindow):
  
     def __init__(self):
         """
@@ -59,7 +55,7 @@ class SRVis(QWidget):
         
         # Initialize the object as a QWidget and
         # set its title and minimum width
-        QWidget.__init__(self)
+        QMainWindow.__init__(self)
         self.setWindowTitle('SRVis')
         self.setMinimumWidth(400)
         
@@ -88,7 +84,11 @@ class SRVis(QWidget):
         #
         #
         # Create the QVBoxLayout that lays out the main part and the buttons
-        self.outerLayout = QHBoxLayout(self)
+        self.outerLayout = QHBoxLayout()
+
+        # Mabe not super nice.. Create a main widget and set it as layout        
+        self.mainWindow = QWidget(self)
+        self.mainWindow.setLayout(self.outerLayout)
         
         # Create the layout of the main part and add it to the outer layout
         self.layout       = QHBoxLayout()
@@ -148,7 +148,7 @@ class SRVis(QWidget):
         self.reloadImageButton.clicked.connect(self.updateImageHistogramData)
 
         # Add the controls for the PSF limiting
-        self.pltSelector   = QComboBox(self)
+        self.pltSelector   = QComboBox()
 
         self.filterMin     = QLineEdit(self)
         self.filterMax     = QLineEdit(self)
@@ -234,12 +234,26 @@ class SRVis(QWidget):
         self.frameSlider.valueChanged.connect(self.frameValueChange)
         self.mainFrame.addWidget(self.frameSlider)
         
+        # Add a statusbar message
+        self.statusBar()
+        
         # Set the outerLayout as the window's main layout
-        self.setLayout(self.outerLayout)
+        self.setCentralWidget(self.mainWindow)
 
+    def statusReady(self, msg=None):
+        if msg == None:
+            self.statusBar().showMessage('Status: Ready')
+        else:
+            self.statusBar().showMessage('Status: ' + msg + ' Done')
+    
+    def statusBusy(self, msg='Status: Busy..'):
+        self.statusBar().showMessage('Status: ' + msg)
+        
     def updateHistogramm(self):
+        self.statusBusy('Updating histograms..')
         self.plotFrame.redraw()
         self.plotHistogram.redraw()
+        self.statusReady('Updating histograms..')
         return
             
 
@@ -265,17 +279,19 @@ class SRVis(QWidget):
     
     
     def changeImageHistogram(self, scaleMin, scaleMax, binSize):
-
+        self.statusBusy('Updating image histogram..')
         self.QTHistogram.plot(scaleMin, scaleMax, binSize)
         self.QTHistogram.redraw()
+        self.statusReady('Updating image histogram..')
     
     def changeBinSize(self):
         try:
             self.binSize = float(self.HistBinSize.text())
         except ValueError: # nothing entered
             return
+        self.statusBusy('Updating bin size..')
         self.changeImageHistogram(self.scaleMin, self.scaleMax, self.binSize)
-
+        self.statusReady('Updating bin size..')
             
     def changeQTscaleMin(self):
         if str(self.QTscaleMin.text()).lower() == 'auto':
@@ -285,7 +301,9 @@ class SRVis(QWidget):
                 self.scaleMin = float(self.QTscaleMin.text())
             except ValueError: # nothing entered
                 return
+        self.statusBusy('Rescaling image histogram..')
         self.changeImageHistogram(self.scaleMin, self.scaleMax, self.binSize)
+        self.statusReady('Rescaling image histogram..')
     
     def changeQTscaleMax(self):
         if str(self.QTscaleMax.text()).lower() == 'auto':
@@ -295,23 +313,28 @@ class SRVis(QWidget):
                 self.scaleMax = float(self.QTscaleMax.text())
             except ValueError: # nothing entered
                 return
-
+        self.statusBusy('Rescaling image histogram..')
         self.changeImageHistogram(self.scaleMin, self.scaleMax, self.binSize)
+        self.statusReady('Rescaling image histogram..')
     
     def changeQTBlur(self):
         self.blurHistogram = self.QTHistBlur.isChecked()
         if self.initialised: # only try to plot once initialized
+            self.statusBusy('Blurring image histogram..')
             # Set sigma to be around 20nm
             sigma = 30.0 / (self.pxSize * self.binSize)
             self.QTHistogram.setGaussianBlur(self.blurHistogram, sigma)
             # Update the histogram
             self.changeImageHistogram(self.scaleMin, self.scaleMax, self.binSize)
+            self.statusReady('Blurring image histogram..')
     
     
     def updateImageHistogramData(self):
+        self.statusBusy('Updateting image data..')
         d = np.asarray(self.data.data.localisations()[['x','y']])
         self.QTHistogram.setData(d)
         self.changeImageHistogram(self.scaleMin, self.scaleMax, self.binSize)
+        self.statusReady('Updateting image data..')
 
     @pyqtSlot(str, str)
     def setHome(self, home):
@@ -341,6 +364,8 @@ class SRVis(QWidget):
     def filterData(self):
         if self.histogramLayout.getCurrentIndex() == 0 and self.fileNameImage == None: #the QT plot is shown
             return # do nothing
+        
+        self.statusBusy('Filtering data..')
         # get the min reading
         if str(self.filterMin.text()).lower() == 'min':
             currentMin = -1.0 * np.inf
@@ -365,6 +390,7 @@ class SRVis(QWidget):
         self.data.filterData(self.filterValues)
         self.updateHistograms()
         self.plotFrame.redraw()
+        self.statusReady('Filtering data..')
     
     def getCurrentHistogram(self):
         idx = self.histogramLayout.getCurrentIndex()
@@ -375,6 +401,7 @@ class SRVis(QWidget):
         return dataType, histogram
         
     def updateHistograms(self):
+        self.statusBusy('Updating histograms..')
         self.localisationCount.setText( str(len(self.data.data.localisations(dataFilter=True))) )
         # update all the histograms
         for idx in range(1,self.histogramLayout.count()): # the first one is the QT histogram
@@ -386,7 +413,7 @@ class SRVis(QWidget):
             histogram.setData(dataUnfiltered, dataFiltered)
             histogram.plotHistogram()
             histogram.redraw()
-
+        self.statusReady('Updating histograms..')
         return
     
     def changedHistogram(self, idx):
@@ -489,9 +516,13 @@ class SRVis(QWidget):
 
 if __name__ == '__main__':
     
+    qt_app = QApplication(sys.argv)
+    
     # Create an instance of the application window and run it
     app = SRVis()
-    app.run()
+#    app.run()
+    app.show()
+    sys.exit(qt_app.exec_())
 
 
 
