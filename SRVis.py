@@ -64,14 +64,17 @@ class SRVis(QWidget):
         self.setMinimumWidth(400)
         
         # Some intital data initialisation
-        self.data         = None
-        self.home         = osp.expanduser("~")
+        self.data          = None
+        self.home          = osp.expanduser("~")
         
-        self.binSize      = 1
-        self.scaleMin     = None
-        self.scaleMax     = None
-        self.dataTypes    = list()
-        self.filterValues = dict()
+        self.binSize       = 1
+        self.scaleMin      = None
+        self.scaleMax      = None
+        self.blurHistogram = False
+        self.dataTypes     = list()
+        self.filterValues  = dict()
+        
+        self.initialised   = False
         
         # Create the main layout
         #
@@ -115,6 +118,7 @@ class SRVis(QWidget):
         self.HistBinSize  = QLineEdit(self)
         self.QTscaleMin   = QLineEdit(self)
         self.QTscaleMax   = QLineEdit(self)
+        self.QTHistBlur   = QCheckBox(self)
         
         self.frame.setSingleStep(1)
         self.frame.setValue(0)
@@ -130,6 +134,7 @@ class SRVis(QWidget):
         self.HistBinSize.returnPressed.connect(self.changeBinSize)
         self.QTscaleMin.returnPressed.connect(self.changeQTscaleMin)
         self.QTscaleMax.returnPressed.connect(self.changeQTscaleMax)
+        self.QTHistBlur.stateChanged.connect(self.changeQTBlur)
         
         # Add them to the form layout with a label
         self.form_layout.addRow('Frame:', self.frame)
@@ -137,6 +142,7 @@ class SRVis(QWidget):
         self.form_layout.addRow('Bin size (in px):', self.HistBinSize)
         self.form_layout.addRow('2D histogram scale max.:', self.QTscaleMax)
         self.form_layout.addRow('2D histogram scale min.:', self.QTscaleMin)
+        self.form_layout.addRow('Apply gaussian filter:', self.QTHistBlur)
         
         self.reloadImageButton  = QPushButton('&Update Image Histogram', self)
         self.reloadImageButton.clicked.connect(self.updateImageHistogramData)
@@ -292,6 +298,16 @@ class SRVis(QWidget):
 
         self.changeImageHistogram(self.scaleMin, self.scaleMax, self.binSize)
     
+    def changeQTBlur(self):
+        self.blurHistogram = self.QTHistBlur.isChecked()
+        if self.initialised: # only try to plot once initialized
+            # Set sigma to be around 20nm
+            sigma = 30.0 / (self.pxSize * self.binSize)
+            self.QTHistogram.setGaussianBlur(self.blurHistogram, sigma)
+            # Update the histogram
+            self.changeImageHistogram(self.scaleMin, self.scaleMax, self.binSize)
+    
+    
     def updateImageHistogramData(self):
         d = np.asarray(self.data.data.localisations()[['x','y']])
         self.QTHistogram.setData(d)
@@ -395,7 +411,6 @@ class SRVis(QWidget):
 
     def showData(self, fileNameImage, fnameLocalisations, fnameLocalisationsType, pxSize, CpPh):
         
-        initialised = False
         def initalise():
             self.histogramLayout = PyMultiPageWidget(self.pltSelector)
             self.histogramLayout.currentIndexChanged.connect(self.changedHistogram)
@@ -425,14 +440,16 @@ class SRVis(QWidget):
 
         d = np.asarray(self.data.data.localisations()[['x','y']])
         self.QTHistogram   = imageHistogramWidget(d, title='2D Histogram', parent=self)
+        sigma = 30.0 / (self.pxSize * self.binSize)
+        self.QTHistogram.setGaussianBlur(self.blurHistogram, sigma) # Update in case the checkbox has been toggled
         self.QTHistogram.plot()
         
         if self.fileNameImage == None: # no TIFF image available, show the histogram instead
             self.imageOverlay.addPage(self.QTHistogram, '')
             self.imageOverlay.setCurrentIndex(1)
         else:
-            if not initialised:
-                initialised = initalise()
+            if not self.initialised:
+                self.initialised = initalise()
             self.plotFrame.data = self.data
             self.plotFrame.initialise()
             self.histogramLayout.addPage(self.QTHistogram, '2D Histogram Visualisation')
@@ -443,8 +460,8 @@ class SRVis(QWidget):
         for dataType in locData.columns:
             if dataType in ['x','y','frame']:
                 continue
-            if not initialised:
-                initialised = initalise()
+            if not self.initialised:
+                self.initialised = initalise()
             self.dataTypes.append(dataType)
             title = '\n\n' + dataType + ' Histogram'
             currentPlotHistogram = dataWidget( locData[dataType], title=title, parent=self.pltSelector )
@@ -453,6 +470,7 @@ class SRVis(QWidget):
             self.histogramLayout.addPage(currentPlotHistogram, dataType)
 
         self.resize(1500,700)
+        self.initialised = True # We're done and set up
         return
 
     def saveLocalisation(self):

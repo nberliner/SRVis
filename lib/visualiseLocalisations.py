@@ -17,6 +17,7 @@
 SRVis  Copyright (C) 2015  Niklas Berliner
 """
 import numpy as np
+from scipy.ndimage.filters import gaussian_filter
 from matplotlib import pyplot as plt
 from pandas import DataFrame
 
@@ -237,9 +238,11 @@ class QuadTree(object):
 
 class ImageHistogram(object):
     """ Simple class to plot super-resolution localisation data in a 2D histogram. """
-    def __init__(self):
+    def __init__(self, gaussianFilter=False, sigma=1):
         
-        self.color = None
+        self.color          = None
+        self.gaussianFilter = gaussianFilter
+        self.sigma          = sigma
     
     def __call__(self, data, scaleMin=None, scaleMax=None, binSize=1):
         
@@ -268,6 +271,11 @@ class ImageHistogram(object):
         ## see here: http://stackoverflow.com/a/18195921
 #        divider = make_axes_locatable(ax)
 #        cax = divider.append_axes("right", size="5%", pad=0.05)
+        
+        # Apply the gaussian filter if desired
+        if self.gaussianFilter:
+            H = gaussian_filter(H, self.sigma)
+            
         return H, extent, sm, scaleMin, scaleMax
         
     
@@ -293,7 +301,9 @@ class ImageHistogram(object):
         color = Color(scaleMin, scaleMax)
         return color, scaleMin, scaleMax
 
-
+    def setGaussianBlur(self, blur, sigma):
+        self.gaussianFilter = blur
+        self.sigma          = sigma
 
 
 

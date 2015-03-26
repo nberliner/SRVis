@@ -102,7 +102,8 @@ class imageHistogramWidget(MyMatplotlibWidget):
 #        self.draw()
         self.toolbar.dynamic_update() # This seems to slightly faster than self.draw()
 
-        
+    def setGaussianBlur(self, blur, sigma):
+        self.get2DHistogram.setGaussianBlur(blur, sigma)
     
     def calculate2DHistogram(self, scaleMin, scaleMax, binSize=1):
         self.H, self.extent, self.sm, scaleMin, scaleMax = self.get2DHistogram(self.data, scaleMin, scaleMax, binSize)
