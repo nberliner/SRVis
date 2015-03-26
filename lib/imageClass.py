@@ -53,6 +53,7 @@ class MyMatplotlibWidget(FigureCanvas):
         self.fig.suptitle(title, fontsize=10, fontweight='bold')
         self.axes = self.fig.add_subplot(111)
         self.fig.subplots_adjust(right=0.9, top=0.85, left=0.1, bottom=0.15)
+        self.fig.set_facecolor('None')
 
         self.canvas = FigureCanvas(self.fig)
         self.canvas.setParent(parent)
@@ -113,7 +114,7 @@ class imageHistogramWidget(MyMatplotlibWidget):
         # In order to keep the pan/zoom after updating the image is kept
         # and only the data is updated after the first image has been plotted.
         if self.im == None:
-            self.im = self.axes.imshow(self.H, extent=self.extent, interpolation='nearest', cmap='gist_heat')
+            self.im = self.axes.imshow(self.H, extent=self.extent, interpolation='nearest', origin='upper', cmap='gist_heat')
         else:
             self.im.set_data(self.H)
         norm = matplotlib.colors.Normalize(vmin=self.scaleMin, vmax=self.scaleMax)
@@ -137,6 +138,7 @@ class overlayWidget(MyMatplotlibWidget):
         self.data = data
 
         # Set some axes properties
+        self.axes.invert_yaxis() # the origin of the images is in the top left corner
         if self.data != None:
             self.initialise()
         
@@ -159,14 +161,14 @@ class overlayWidget(MyMatplotlibWidget):
         imgSize = np.shape(self.data.getImage(0))
         axLimit = np.max(imgSize) - 1 # in case it is non square
         self.axes.set_xlim([0, axLimit])
-        self.axes.set_ylim([0, axLimit])
+        self.axes.set_ylim([axLimit, 0]) # keep the inverted y-axis
 
         self.updateView()
         return
 
     def drawFirstImage(self):
         imageData = self.data.getImage(0)
-        self.im  = self.axes.imshow(imageData, interpolation='none', cmap = plt.cm.Greys_r)
+        self.im  = self.axes.imshow(imageData, interpolation='none', origin='upper', cmap = plt.cm.Greys_r)
         return
     
     def updateImage(self, frame):
