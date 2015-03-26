@@ -171,28 +171,39 @@ def readRapidStormLocalisations(fname, photonConversion=1.0, pixelSize=1.0):
 
 def readXYTLocalisations(fname, pixelSize=1.0):
     """
-    Read a generic xyt file. The following columns must be present (case sensitive!):
+    Read a generic xyt file. The first line is used as header information.
+    The following columns must be present (case sensitive!),
     
             x   y   frame
     
-    The first line is used as header information.
+    the remaining columns are read and can be used for filtering.
     """
+    # Read the header
+    with open(fname, 'r') as f:
+        header = f.readline().strip().split('\t')
+        # Check the required columns
+        assert( 'x' in header )
+        assert( 'y' in header )
+        assert( 'frame' in header )
+    
     # Read the data
     allData  = np.loadtxt(fname, skiprows=1)
+    
+    # Sort ascending frames, thanks to: http://stackoverflow.com/a/2828121
+    frameIndex = header.index('frame')
+    allData = allData[allData[:,frameIndex].argsort()]
     
     # Assemble the index structure for the DataFrame
     # See readRapidStormLocalisations comments for a brief explanation.
     idx         = indexGenerator()
-    imageNumber = 2
-    level1 = [ 'frame_' + str(int(frame)) for frame in allData[:,imageNumber] ]
-    level2 = [ idx(frame) for frame in allData[:,imageNumber] ]
+    level1 = [ 'frame_' + str(int(frame)) for frame in allData[:,frameIndex] ]
+    level2 = [ idx(frame) for frame in allData[:,frameIndex] ]
     index  = [ level1, level2 ]
     
     # Put the data together
-#    data = DataFrame(allData, columns=['x','y','frame'], index=index)
-    data = DataFrame(allData, index=index)
+    data = DataFrame(allData, index=index, columns=header)
     
-    # Convert x and y data to pixels
+    # Convert from nm to px    
     data[['x','y']] = data[['x','y']] / float(pixelSize)
     
     return data
