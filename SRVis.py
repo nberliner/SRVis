@@ -70,6 +70,8 @@ class SRVis(QMainWindow):
         self.dataTypes     = list()
         self.filterValues  = dict()
         
+        self.localisationPrecision = 20.0 # assume an initial value of 20nm
+        
         self.initialised   = False
         
         # Create the main layout
@@ -322,7 +324,7 @@ class SRVis(QMainWindow):
         if self.initialised: # only try to plot once initialized
             self.statusBusy('Blurring image histogram..')
             # Set sigma to be around 20nm
-            sigma = 30.0 / (self.pxSize * self.binSize)
+            sigma = self.localisationPrecision / (self.pxSize * self.binSize)
             self.QTHistogram.setGaussianBlur(self.blurHistogram, sigma)
             # Update the histogram
             self.changeImageHistogram(self.scaleMin, self.scaleMax, self.binSize)
@@ -465,9 +467,10 @@ class SRVis(QMainWindow):
         
         self.localisationCountTotal.setText( str(len(self.data.data.localisations())) )
 
+        ## Generate the image histogram
         d = np.asarray(self.data.data.localisations()[['x','y']])
         self.QTHistogram   = imageHistogramWidget(d, title='2D Histogram', parent=self)
-        sigma = 30.0 / (self.pxSize * self.binSize)
+        sigma = self.localisationPrecision / (self.pxSize * self.binSize)
         self.QTHistogram.setGaussianBlur(self.blurHistogram, sigma) # Update in case the checkbox has been toggled
         self.QTHistogram.plot()
         
