@@ -272,7 +272,10 @@ class SRVis(QMainWindow):
         assert( isinstance(frame, int) )
         
         self.frameSlider.setValue( frame )
-        self.plotFrame.redraw(frame)
+        try:
+            self.plotFrame.redraw(frame)
+        except AttributeError: # this happens if there is no raw image specified by the user
+            pass
         self.frame.setValue(frame)
         
     def changeMarkerSize(self):
@@ -458,9 +461,9 @@ class SRVis(QMainWindow):
             return True
         
         ## use for testing
-        baseDirectory = './example/'
-        fileNameImage = baseDirectory + 'SRVis_imageData.tif'
-        fnameLocalisations = baseDirectory + 'SRVis_imageData.txt'
+#        baseDirectory = './example/'
+#        fileNameImage = baseDirectory + 'SRVis_imageData.tif'
+#        fnameLocalisations = baseDirectory + 'SRVis_imageData.txt'
         
         
         self.fileNameImage          = fileNameImage
