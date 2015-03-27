@@ -138,6 +138,14 @@ class localisations():
         
     def numberOfLocalisations(self, dataType=None):
         return len(self.localisations(dataType=dataType))
+    
+    def localisationsPerFrame(self, dataType=None):
+        data = self.localisations(dataType=dataType)
+        # Get the frames and the number of localisations per frame
+        frames          = np.asarray(data['frame'], dtype=np.int64)
+        perFrames       = np.asarray(data.groupby('frame').count().index, dtype=np.int64)
+        nrLocalisations = np.asarray(data.groupby('frame').count().x.values)
+        return frames, (nrLocalisations, perFrames)
 
     def _getXYT(self, data):
         """ Get the x,y,t data from the DataFrame """
