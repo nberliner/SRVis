@@ -23,6 +23,14 @@ Visualisation tool for super-resolution localisation data
 	```
 	$ python SRVis.py
 	```
+#### If you do not want to use anaconda ####
+1. Get the tifffile.py module from (http://www.lfd.uci.edu/~gohlke/code/tifffile.py.html)
+2. Copy tifffile.py into the SRVis/lib folder
+3. Run SRVis.py
+
+	```
+	$ python SRVis.py
+	```
 
 ### Troubleshooting ###
 + If running on Kubuntu make sure to do the following (see https://github.com/ContinuumIO/anaconda-issues/issues/32 for more information)
