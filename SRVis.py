@@ -353,23 +353,22 @@ class SRVis(QMainWindow):
 
 
     def reloadData(self):
-        pass
-#    def reloadData(self):
-#        if self.dataInitialised:
-##            print 'reloading data'
-#            self.data = dataHandler(self.fileNameImage, self.fnameLocalisations, \
-#                                    self.fnameLocalisationsType, self.pxSize, \
-#                                    self.fnameTracks, self.fnameTracksType)
-#            self.plotFrame.data = data
-#            self.plotFrame.redraw()
-#            
-#            self.PSFwidthData, self.PSFratioData = data.getPSFdata()
-#            self.localisationCountTotal.setText(str(len(self.PSFwidthData)))
-#            self.updatePSFstats(self.PSFwidthData)
-#            
-#            self.updateHistogramm()
-#
-#        return
+        if self.data != None:
+            self.statusBusy('Reloading localisation data..')
+            self.data.reloadData('localisations') # Update the localisation data
+            
+            # Update the localisation count
+            self.localisationCountTotal.setText( str(len(self.data.data.localisations())) )
+            
+            # Update the histograms
+            self.updateHistograms()
+            self.plotFrame.redraw()
+            
+            # Update the image histogram
+            self.updateImageHistogramData()
+            
+            self.statusReady(None)
+        return
 
     def filterData(self):
         if self.histogramLayout.getCurrentIndex() == 0: # the QT plot or nr loc per frame

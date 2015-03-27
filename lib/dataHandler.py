@@ -31,7 +31,12 @@ class dataHandler():
     The super-resolution data is stored in a pandas DataFrame and the TIFF image
     is read using tifffile.py (see http://www.lfd.uci.edu/~gohlke/code/tifffile.py.html)
     """
-    def __init__(self, fnameImage, fnameLocalisations, fnameLocalisationsType, pixelSize, CpPh, eps=50):
+    def __init__(self, fnameImage, fnameLocalisations, fnameLocalisationsType, pixelSize, CpPh):
+        
+        self.fnameLocalisations = fnameLocalisations
+        self.fnameLocalisationsType = fnameLocalisationsType
+        self.pixelSize = pixelSize
+        self.CpPh = CpPh
 
         if fnameImage == None or fnameImage == '':
             self.image = None
@@ -40,17 +45,24 @@ class dataHandler():
             self.image         = Tiff.TiffFile(fnameImage)
         
         print 'Reading the localisations'
+        self._loadLocalisations()
+
+    def _loadLocalisations(self):
         # Here other localisation data types can be added if desired
-        if fnameLocalisationsType == 'rapidstorm':
+        if self.fnameLocalisationsType == 'rapidstorm':
             self.data = rapidstormLocalisations()
-            self.data.readFile(fnameLocalisations, photonConversion=CpPh, pixelSize=pixelSize)
-        elif fnameLocalisationsType == 'xyt':
+            self.data.readFile(self.fnameLocalisations, photonConversion=self.CpPh, pixelSize=self.pixelSize)
+        elif self.fnameLocalisationsType == 'xyt':
             self.data = XYTLocalisations()
-            self.data.readFile(fnameLocalisations, pixelSize=pixelSize)
+            self.data.readFile(self.fnameLocalisations, pixelSize=self.pixelSize)
         else:
             print 'No localisation type is checked. Something went wrong..exiting'
             sys.exit() # Very ugly! Should be changed to a popup!
-
+            
+    def reloadData(self, dataType):
+        if dataType == 'localisations':
+            self._loadLocalisations()
+    
     def getImage(self, frame):
         """ Returns the frame as np.array """
         return self.image[frame].asarray()
