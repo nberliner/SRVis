@@ -67,6 +67,7 @@ class SRVis(QMainWindow):
         self.scaleMin      = None
         self.scaleMax      = None
         self.blurHistogram = False
+        self.sigma         = 1.0
         self.dataTypes     = list()
         self.filterValues  = dict()
         
@@ -121,6 +122,7 @@ class SRVis(QMainWindow):
         self.QTscaleMin   = QLineEdit(self)
         self.QTscaleMax   = QLineEdit(self)
         self.QTHistBlur   = QCheckBox(self)
+        self.QTBlurSigma  = QLineEdit(self)
         
         self.frame.setSingleStep(1)
         self.frame.setValue(0)
@@ -130,6 +132,7 @@ class SRVis(QMainWindow):
         self.HistBinSize.setPlaceholderText("1")
         self.QTscaleMin.setPlaceholderText("Auto")
         self.QTscaleMax.setPlaceholderText("Auto")
+        self.QTBlurSigma.setPlaceholderText("20")
         
         self.frame.valueChanged.connect(self.frameValueChange)
         self.markerSize.returnPressed.connect(self.changeMarkerSize)
@@ -137,6 +140,7 @@ class SRVis(QMainWindow):
         self.QTscaleMin.returnPressed.connect(self.changeQTscaleMin)
         self.QTscaleMax.returnPressed.connect(self.changeQTscaleMax)
         self.QTHistBlur.stateChanged.connect(self.changeQTBlur)
+        self.QTBlurSigma.returnPressed.connect(self.changedSigma)
         
         # Add them to the form layout with a label
         self.form_layout.addRow('Frame:', self.frame)
@@ -145,6 +149,7 @@ class SRVis(QMainWindow):
         self.form_layout.addRow('2D histogram scale max.:', self.QTscaleMax)
         self.form_layout.addRow('2D histogram scale min.:', self.QTscaleMin)
         self.form_layout.addRow('Apply gaussian blur:', self.QTHistBlur)
+        self.form_layout.addRow('Gaussian blur sigma (in nm):', self.QTBlurSigma)
         
         self.reloadImageButton  = QPushButton('&Update Image Histogram', self)
         self.reloadImageButton.clicked.connect(self.updateImageHistogramData)
@@ -292,6 +297,7 @@ class SRVis(QMainWindow):
         except ValueError: # nothing entered
             return
         self.statusBusy('Updating bin size..')
+        self.updateSigma()
         self.changeImageHistogram(self.scaleMin, self.scaleMax, self.binSize)
         self.statusReady('Updating bin size..')
             
@@ -323,9 +329,8 @@ class SRVis(QMainWindow):
         self.blurHistogram = self.QTHistBlur.isChecked()
         if self.initialised: # only try to plot once initialized
             self.statusBusy('Blurring image histogram..')
-            # Set sigma to be around 20nm
-            sigma = self.localisationPrecision / (self.pxSize * self.binSize)
-            self.QTHistogram.setGaussianBlur(self.blurHistogram, sigma)
+            # Set the gaussian blur
+            self.QTHistogram.setGaussianBlur(self.blurHistogram, self.sigma)
             # Update the histogram
             self.changeImageHistogram(self.scaleMin, self.scaleMax, self.binSize)
             self.statusReady('Blurring image histogram..')
@@ -437,6 +442,12 @@ class SRVis(QMainWindow):
         else:
             self.filterMax.setText( str(maxValue) )
 
+    def updateSigma(self):
+        self.sigma = self.localisationPrecision / (self.pxSize * self.binSize)
+        self.QTBlurSigma.setText( "%.2f" %self.localisationPrecision ) # update the user interface
+    
+    def changedSigma(self):
+        self.sigma = float(self.QTBlurSigma.text()) / (self.pxSize * self.binSize)
 
     def showData(self, fileNameImage, fnameLocalisations, fnameLocalisationsType, pxSize, CpPh):
         
@@ -472,12 +483,13 @@ class SRVis(QMainWindow):
         if 'Uncertainty x' in self.data.data.localisations().columns:
             mean = self.data.data.localisations()['Uncertainty x'].mean()
             std  = self.data.data.localisations()['Uncertainty x'].std()
-            self.localisationPrecision = mean + 2.0*std
-        sigma = self.localisationPrecision / (self.pxSize * self.binSize)
+            self.localisationPrecision = mean + 2.0*std        
+        self.updateSigma()
+        
         # Get the data and plot the image histogram       
         d = np.asarray(self.data.data.localisations()[['x','y']])
         self.QTHistogram   = imageHistogramWidget(d, title='2D Histogram', parent=self)
-        self.QTHistogram.setGaussianBlur(self.blurHistogram, sigma) # Update in case the checkbox has been toggled
+        self.QTHistogram.setGaussianBlur(self.blurHistogram, self.sigma) # Update in case the checkbox has been toggled
         self.QTHistogram.plot()
         
         if self.fileNameImage == None: # no TIFF image available, show the histogram instead
