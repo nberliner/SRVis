@@ -447,9 +447,9 @@ class SRVis(QMainWindow):
             return True
         
         ## use for testing
-#        baseDirectory = './example/'
-#        fileNameImage = baseDirectory + 'SRVis_imageData.tif'
-#        fnameLocalisations = baseDirectory + 'SRVis_imageData.txt'
+        baseDirectory = './example/'
+        fileNameImage = baseDirectory + 'SRVis_imageData.tif'
+        fnameLocalisations = baseDirectory + 'SRVis_imageData.txt'
         
         
         self.fileNameImage          = fileNameImage
@@ -468,9 +468,15 @@ class SRVis(QMainWindow):
         self.localisationCountTotal.setText( str(len(self.data.data.localisations())) )
 
         ## Generate the image histogram
+        # Find the optimal blurring based on the localisation precision (from rapidstorm)
+        if 'Uncertainty x' in self.data.data.localisations().columns:
+            mean = self.data.data.localisations()['Uncertainty x'].mean()
+            std  = self.data.data.localisations()['Uncertainty x'].std()
+            self.localisationPrecision = mean + 2.0*std
+        sigma = self.localisationPrecision / (self.pxSize * self.binSize)
+        # Get the data and plot the image histogram       
         d = np.asarray(self.data.data.localisations()[['x','y']])
         self.QTHistogram   = imageHistogramWidget(d, title='2D Histogram', parent=self)
-        sigma = self.localisationPrecision / (self.pxSize * self.binSize)
         self.QTHistogram.setGaussianBlur(self.blurHistogram, sigma) # Update in case the checkbox has been toggled
         self.QTHistogram.plot()
         
