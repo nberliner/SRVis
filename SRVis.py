@@ -142,7 +142,7 @@ class SRVis(QMainWindow):
         self.form_layout.addRow('Bin size (in px):', self.HistBinSize)
         self.form_layout.addRow('2D histogram scale max.:', self.QTscaleMax)
         self.form_layout.addRow('2D histogram scale min.:', self.QTscaleMin)
-        self.form_layout.addRow('Apply gaussian filter:', self.QTHistBlur)
+        self.form_layout.addRow('Apply gaussian blur:', self.QTHistBlur)
         
         self.reloadImageButton  = QPushButton('&Update Image Histogram', self)
         self.reloadImageButton.clicked.connect(self.updateImageHistogramData)
