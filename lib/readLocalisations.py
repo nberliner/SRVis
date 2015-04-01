@@ -142,6 +142,7 @@ def readRapidStormLocalisations(fname, photonConversion=1.0, pixelSize=1.0):
         
     dataIndexes = [xPosition, yPosition, xPositionUncertainty, yPositionUncertainty, \
                    amplitude, imageNumber, fitResidues, SNRindex]
+
     
     # Assemble the index structure for the DataFrame
     # A two level index is used, i.e.
@@ -163,6 +164,9 @@ def readRapidStormLocalisations(fname, photonConversion=1.0, pixelSize=1.0):
     
     # Create the DataFrame
     data = DataFrame(allData[:,dataIndexes], columns=columns, index=index)
+    
+    # Drop columns that are nan
+    data.dropna(axis=1, how='all', inplace=True)
 
     return data
 
