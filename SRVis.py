@@ -371,11 +371,9 @@ class SRVis(QMainWindow):
         return
 
     def filterData(self):
-        if self.histogramLayout.getCurrentIndex() == 0: # the QT plot or nr loc per frame
+        if self.histogramLayout.getCurrentIndex() == 0 and self.fileNameImage != None: # the QT plot or nr loc per frame
             return # do nothing
-        elif self.histogramLayout.getCurrentIndex() == 1 and self.fileNameImage != None: # the QT plot or nr loc per frame
-            return # do nothing
-        
+
         self.statusBusy('Filtering data..')
         # get the min reading
         if str(self.filterMin.text()).lower() == 'min':
@@ -400,15 +398,18 @@ class SRVis(QMainWindow):
         self.filterValues[dataType] = (currentMin, currentMax)
         self.data.filterData(self.filterValues)
         self.updateHistograms()
-        self.plotFrame.redraw()
+        try:
+            self.plotFrame.redraw()
+        except AttributeError: # this happens if there is no raw image specified by the user
+            pass
         self.statusReady('Filtering data..')
     
     def getHistogramIndex(self):
-        idx  = self.histogramLayout.getCurrentIndex() - 1 # The first one is the nr of loc per frame
-        idxs = range(1,self.histogramLayout.count()) # the first one is the QT histogram
+        idx  = self.histogramLayout.getCurrentIndex()
+        idxs = range(self.histogramLayout.count()) # the first one is the QT histogram
         if self.fileNameImage != None:
             idx -= 1 # Minus one for the image histogram
-            idxs = range(2,self.histogramLayout.count()) # the first one is the QT histogram, the second the nr of loc
+            idxs = range(1,self.histogramLayout.count()) 
         
         return idx, idxs
     
@@ -422,13 +423,8 @@ class SRVis(QMainWindow):
         self.statusBusy('Updating histograms..')
         self.localisationCount.setText( str(len(self.data.data.localisations(dataFilter=True))) )
         _, idxs = self.getHistogramIndex() # get the correct indexes
-        # Update the nr of loc per frame histogram
-        locInFrames, _ = self.data.data.localisationsPerFrame()
-        histogram = self.histogramLayout.widget(idxs[0]-1)
-        histogram.setData(locInFrames, locInFrames)
-        histogram.plotHistogram()
-        histogram.redraw()
-        # Update the remaining histograms
+
+        # Update the histograms
         for idx in idxs:
             dataType = self.dataTypes[idx-idxs[0]] # start at zero
             dataUnfiltered = self.data.data.localisations(dataFilter=False)[dataType]
@@ -525,19 +521,19 @@ class SRVis(QMainWindow):
         # Add the number of localisations per frame
         if not self.initialised:
             self.initialised = initalise()
-        locInFrames, _ = self.data.data.localisationsPerFrame()
-        dataType       = '# of loc. per frame'
-        title = '\n\n' + dataType + ' Histogram'
-        currentPlotHistogram = dataWidget( locInFrames, title=title, parent=self.pltSelector )
-        currentPlotHistogram.plotHistogram()
-        self.histogramLayout.addPage(currentPlotHistogram, dataType)
+
         # Add the optional histograms
         locData = self.data.data.localisations()
         for dataType in locData.columns:
-            if dataType in ['x','y','frame']:
+            if dataType in ['x','y']:
                 continue
             self.dataTypes.append(dataType)
-            title = '\n\n' + dataType + ' Histogram'
+            # Set the title
+            if dataType == 'frame':
+                title = '\n\n # of loc. per frame'
+            else:
+                title = '\n\n' + dataType
+            
             currentPlotHistogram = dataWidget( locData[dataType], title=title, parent=self.pltSelector )
             currentPlotHistogram.plotHistogram()
             self.filterValues[dataType] = (-np.inf, np.inf)
