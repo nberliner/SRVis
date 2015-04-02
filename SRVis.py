@@ -528,16 +528,18 @@ class SRVis(QMainWindow):
             if dataType in ['x','y']:
                 continue
             self.dataTypes.append(dataType)
+            # Add the filter information
+            self.filterValues[dataType] = (-np.inf, np.inf)
             # Set the title
             if dataType == 'frame':
-                title = '\n\n # of loc. per frame'
+                title = '\n\nNr. of loc. per frame'
             else:
                 title = '\n\n' + dataType
-            
+            # Add the histogram to the pltSelector instance
             currentPlotHistogram = dataWidget( locData[dataType], title=title, parent=self.pltSelector )
             currentPlotHistogram.plotHistogram()
-            self.filterValues[dataType] = (-np.inf, np.inf)
-            self.histogramLayout.addPage(currentPlotHistogram, dataType)
+            
+            self.histogramLayout.addPage(currentPlotHistogram, title.strip())
 
         self.resize(1500,700)
         self.initialised = True # We're done and set up
