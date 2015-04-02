@@ -31,7 +31,7 @@ from matplotlib.backends.backend_qt4agg import FigureCanvasQTAgg as FigureCanvas
 #from matplotlib.backends.backend_qt4agg import NavigationToolbar2QT as NavigationToolbar
 from matplotlib.backends.backend_qt4agg import NavigationToolbar2QT
 
-
+from matplotlib.patches import Rectangle
 from matplotlib.figure import Figure
 from mpl_toolkits.axes_grid1 import make_axes_locatable
 
@@ -92,11 +92,62 @@ class imageHistogramWidget(MyMatplotlibWidget):
         
         self.im       = None
         self.colorbar = None
+        self.scalebar = None
+        self.scalebarUnit = 100.0 # conversion between pixels und nm
+        self.dataMinX = np.min(data[:1]) # x and y are flipped for the histogram creation
+        self.dataMinY = np.min(data[:0])
         
         self.get2DHistogram = ImageHistogram()   
+        
+        # Connect the pan/zoom events to the scale bar update
+        self.axes.callbacks.connect('xlim_changed', self.updateScaleBar)
+        self.axes.callbacks.connect('ylim_changed', self.updateScaleBar)
     
     def setData(self, data):
         self.data = data
+    
+    def updateScaleBar(self, args):
+        xmin, ymin, deltax, deltay = self.axes.viewLim.bounds
+        width = 10
+        height = 2
+        try:
+            self.scalebar.remove()
+        except AttributeError: # Handle the case if the scalebar is not yet drawn
+            pass
+        self.scalebar = self.axes.add_patch( Rectangle((xmin+5, ymin-5), width, height, facecolor="white", edgecolor='none') )
+        self.draw()
+        print 'Updating the updateScaleBar', self.axes.viewLim.bounds
+        print 'The scalebar', self.scalebar
+    
+    def _setupScalebar(self):
+        # Check the selected ROI, calculate the units and construct the rectangle that should be plotted
+        xmin, ymin, deltax, deltay = self.axes.viewLim.bounds
+        xmax = xmin + deltax
+        ymax = ymin + deltay
+        
+        # Fix the scalebar at 2% of the bottom left of the view
+        twoPercentX = 0.02 * (xmax - xmin)
+        twoPercentY = 0.02 * (ymax - ymin)
+    
+    def _getScalebarLength(self, extendX):
+        # Take 50nm, 100nm, 500nm, 1000nm, 5000nm, 10000nm
+        extendX *= self.scalebarUnit # Convert to nm
+        
+        # scalebar shoul fill 5% to 10% of the image range
+        if 0.05 <= 50.0/extendX and 50.0/extendX < 0.01:
+            return 50
+        elif 0.05 <= 100.0/extendX and 100.0/extendX < 0.01:
+            return 100
+        elif 0.05 <= 500.0/extendX and 500.0/extendX < 0.01:
+            return 500
+        elif 0.05 <= 1000.0/extendX and 1000.0/extendX < 0.01:
+            return 1000
+        elif 0.05 <= 5000.0/extendX and 5000.0/extendX < 0.01:
+            return 5000
+        else:
+            return 10000
+#        elif 0.05 <= 10000.0/extendX and 10000.0/extendX < 0.01:
+#            return 10000
     
     def redraw(self):
 #        self.draw()
