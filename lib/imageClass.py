@@ -226,8 +226,9 @@ class dataWidget(MyMatplotlibWidget):
         self.dataType = None
         self.bins = None
 
-        self.normalise = np.zeros(np.shape(data)) # see hist entry in http://matplotlib.org/api/axes_api.html
-        self.normalise[:,] = 1.0/normalise
+        self.normalise = normalise
+        self.normaliseUnfiltered = np.zeros(np.shape(self.dataUnfiltered)) # see hist entry in http://matplotlib.org/api/axes_api.html
+        self.normaliseUnfiltered[:,] = 1.0/normalise
 
     def redraw(self):
         self.draw()
@@ -251,9 +252,13 @@ class dataWidget(MyMatplotlibWidget):
         if self.bins == None:
             self.bins = 50
         
-        # Plot the data
-        self.axes.hist(self.dataUnfiltered, bins=self.bins, normed=False, weights=self.normalise, histtype='bar', facecolor='grey', edgecolor='None',  alpha=0.8, rwidth=0.8)
-        self.axes.hist(self.data, bins=self.bins, normed=False, weights=self.normalise, histtype='bar', facecolor='blue', rwidth=0.8, zorder=10)
+        ## Plot the data
+        # Get the weights for the filtered data
+        normaliseFiltered = np.zeros(np.shape(self.data)) # see hist entry in http://matplotlib.org/api/axes_api.html
+        normaliseFiltered[:,] = 1.0/self.normalise
+        # Plot the histograms
+        self.axes.hist(self.dataUnfiltered, bins=self.bins, normed=False, weights=self.normaliseUnfiltered, histtype='bar', facecolor='grey', edgecolor='None',  alpha=0.8, rwidth=0.8)
+        self.axes.hist(self.data, bins=self.bins, normed=False, weights=normaliseFiltered, histtype='bar', facecolor='blue', rwidth=0.8, zorder=10)
         
         self.redraw()
         return
