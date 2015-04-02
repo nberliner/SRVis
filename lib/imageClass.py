@@ -211,7 +211,7 @@ class overlayWidget(MyMatplotlibWidget):
 
 class dataWidget(MyMatplotlibWidget):
     
-    def __init__(self, data, dataUnfiltered=None, title='Title', parent=None):
+    def __init__(self, data, dataUnfiltered=None, title='Title', parent=None, normalise=1.0):
         
         super(dataWidget, self).__init__(parent=parent, title=title)
         
@@ -225,6 +225,9 @@ class dataWidget(MyMatplotlibWidget):
             
         self.dataType = None
         self.bins = None
+
+        self.normalise = np.zeros(np.shape(data)) # see hist entry in http://matplotlib.org/api/axes_api.html
+        self.normalise[:,] = 1.0/normalise
 
     def redraw(self):
         self.draw()
@@ -249,8 +252,8 @@ class dataWidget(MyMatplotlibWidget):
             self.bins = 50
         
         # Plot the data
-        self.axes.hist(self.dataUnfiltered, bins=self.bins, normed=False, histtype='bar', facecolor='grey', edgecolor='None',  alpha=0.8, rwidth=0.8)
-        self.axes.hist(self.data, bins=self.bins, normed=False, histtype='bar', facecolor='blue', rwidth=0.8, zorder=10)
+        self.axes.hist(self.dataUnfiltered, bins=self.bins, normed=False, weights=self.normalise, histtype='bar', facecolor='grey', edgecolor='None',  alpha=0.8, rwidth=0.8)
+        self.axes.hist(self.data, bins=self.bins, normed=False, weights=self.normalise, histtype='bar', facecolor='blue', rwidth=0.8, zorder=10)
         
         self.redraw()
         return

@@ -532,11 +532,18 @@ class SRVis(QMainWindow):
             self.filterValues[dataType] = (-np.inf, np.inf)
             # Set the title
             if dataType == 'frame':
-                title = '\n\nNr. of loc. per frame'
+                title = '\n\nAvg. nr. of loc. per frame'
             else:
                 title = '\n\n' + dataType
-            # Add the histogram to the pltSelector instance
-            currentPlotHistogram = dataWidget( locData[dataType], title=title, parent=self.pltSelector )
+            ## Add the histogram to the pltSelector instance
+            # The nr. of loc. per frame data should be normalised acording to the bin size
+            if dataType == 'frame':
+                normalise = np.max(locData[dataType]) / 50.0 # Currently the number of bins is fixed to 50.
+                                                             # This neeeds to be changed if the number of bins is changed
+            else:
+                normalise = 1.0 # Don't normalise
+
+            currentPlotHistogram = dataWidget(locData[dataType] , title=title, parent=self.pltSelector, normalise=normalise )
             currentPlotHistogram.plotHistogram()
             
             self.histogramLayout.addPage(currentPlotHistogram, title.strip())
