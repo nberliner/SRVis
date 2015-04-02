@@ -250,9 +250,11 @@ class localisations():
             data = self.fiducials
 
         try:
+            # Convert data to nm and save to disk
             data[['x','y']] = data[['x','y']] * float(pixelSize)
-#            data.to_csv(fname, sep='\t', columns=['x','y','frame'], index=False)
             data.to_csv(fname, sep='\t', index=False)
+            # Convert back to nm for continued viewing in the overlay with the TIFF image
+            data[['x','y']] = data[['x','y']] / float(pixelSize)
         except:
             print 'Sorry, could not write the data to disk!'
 

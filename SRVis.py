@@ -546,9 +546,15 @@ class SRVis(QMainWindow):
         return
 
     def saveLocalisation(self):
+        # Ast the user where to save the data
         path = QFileDialog.getSaveFileName(self, 'Save localisations to', self.home)
-        print 'Saving data to:', str(path)
+        
+        self.statusBusy('Saving data to:' + str(path) + ' ..') # update the status bar
+        if not path[-4:] == '.dat' and not path[-4:] == '.txt': # check the file extension
+            path = str(path) + '.dat'
+
         self.data.saveLocalisations(str(path), self.pxSize)
+        self.statusReady('Saving data')
  
     def run(self):
         # Show the form
