@@ -89,6 +89,7 @@ class imageHistogramWidget(MyMatplotlibWidget):
         
         self.scaleMin = None
         self.scaleMax = None
+        self.scalebarLength = None
         
         self.im       = None
         self.colorbar = None
@@ -106,38 +107,48 @@ class imageHistogramWidget(MyMatplotlibWidget):
     def setData(self, data):
         self.data = data
     
+    def setScalebarLength(self, length):
+        self.scalebarLength = length
+    
     def updateScaleBar(self, args):
-#        xmin, ymin, deltax, deltay = self.axes.viewLim.bounds
-#        width = 10
-#        height = 2
+        # Remove the old scalebar patch
         try:
             self.scalebar.remove()
         except AttributeError: # Handle the case if the scalebar is not yet drawn
             pass
-        patch = self._setupScalebar()
-#        self.scalebar = self.axes.add_patch( Rectangle((xmin+5, ymin-5), width, height, facecolor="white", edgecolor='none') )
-        self.scalebar = self.axes.add_patch( patch )
+        except ValueError: # this happens if there is no scalebar
+            pass
+
+        if self.scalebarLength == None: # Don't show the scalebar
+            pass
+        else:
+            # Assemble the scalebar            
+            patch = self.setupScalebar(self.scalebarLength)
+            # Add it to the image
+            self.scalebar = self.axes.add_patch( patch )
+
+        # Update the figure
         self.draw()
-        print 'Updating the updateScaleBar', self.axes.viewLim.bounds
-        print 'The scalebar', self.scalebar
     
-    def _setupScalebar(self):
+    def setupScalebar(self, length):
+        if length == None: # Don't show a scalebar
+            return None
+            
         # Check the selected ROI, calculate the units and construct the rectangle that should be plotted
         xmin, ymin, deltax, deltay = self.axes.viewLim.bounds
         xmax = xmin + deltax
         ymax = ymin + deltay
         
         # Check which scalebar length should be used
-        scalebarLength = self._getScalebarLength(xmax-xmin)
-        scalebarWidth  = 0.1 * scalebarLength
-        
-        print 'scalebarLength', scalebarLength
-        print 'scalebarWidth', scalebarWidth
-        
-        # Fix the scalebar at 2% of the bottom left of the view
+        scalebarLength = self._getScalebarLength(length)
+        scalebarWidth  = self._getSaclebarWidth(scalebarLength, np.abs((ymax-ymin)))
+
+        # Fix the scalebar at 5% of the bottom left of the view
         twoPercentX = 0.05 * (xmax - xmin)
         twoPercentY = 0.05 * (ymax - ymin)
         
+        # Make sure that the scalebar remains on the image. Otherwise it might
+        # move to the (white) background border and become invisible
         if self.dataMinX >= xmin:
             xpos = self.dataMinX + twoPercentX
         else:
@@ -147,29 +158,22 @@ class imageHistogramWidget(MyMatplotlibWidget):
         else:
             ypos = ymin + twoPercentY - scalebarWidth
             
-        return Rectangle((xpos, ypos), scalebarLength, scalebarWidth, facecolor="green", edgecolor='black')
+        return Rectangle((xpos, ypos), scalebarLength, scalebarWidth, facecolor="white", edgecolor='none')
     
-    def _getScalebarLength(self, extendX):
-        # Take 50nm, 100nm, 500nm, 1000nm, 5000nm, 10000nm
-        extendX *= self.scalebarUnit # Convert to nm
-        
-        # scalebar shoul fill 5% to 10% of the image range
-        print 'extendX', extendX
-        if 0.05 <= 50.0/extendX and 50.0/extendX < 0.1:
-            length = 50.0
-        elif 0.05 <= 100.0/extendX and 100.0/extendX < 0.1:
-            length = 100.0
-        elif 0.05 <= 500.0/extendX and 500.0/extendX < 0.1:
-            length = 500.0
-        elif 0.05 <= 1000.0/extendX and 1000.0/extendX < 0.1:
-            length = 1000.0
-        elif 0.05 <= 5000.0/extendX and 5000.0/extendX < 0.1:
-            length = 5000.0
-        else:
-            length = 10000.0
+    def _getScalebarLength(self, length):
+        # Convert the scalebar from nm to pixels
         return length / self.scalebarUnit
-#        elif 0.05 <= 10000.0/extendX and 10000.0/extendX < 0.01:
-#            return 10000
+    
+    def _getSaclebarWidth(self, scalebarLength, extendY):
+        # Adjust the thickness of the scalebar
+        scalebarWidth  = 0.3 * scalebarLength
+        
+        if scalebarWidth >= 0.1 * extendY:
+            scalebarWidth  = 0.1 * scalebarLength
+        elif scalebarWidth >= 0.05 * extendY:
+            scalebarWidth  = 0.2 * scalebarLength
+            
+        return scalebarWidth
     
     def redraw(self):
 #        self.draw()

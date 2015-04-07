@@ -123,6 +123,7 @@ class SRVis(QMainWindow):
         self.QTscaleMax   = QLineEdit(self)
         self.QTHistBlur   = QCheckBox(self)
         self.QTBlurSigma  = QLineEdit(self)
+        self.scalebar     = QLineEdit(self)
         
         self.frame.setSingleStep(1)
         self.frame.setValue(0)
@@ -133,6 +134,7 @@ class SRVis(QMainWindow):
         self.QTscaleMin.setPlaceholderText("Auto")
         self.QTscaleMax.setPlaceholderText("Auto")
         self.QTBlurSigma.setPlaceholderText("20")
+        self.scalebar.setPlaceholderText("None")
         
         self.frame.valueChanged.connect(self.frameValueChange)
         self.markerSize.returnPressed.connect(self.changeMarkerSize)
@@ -141,6 +143,7 @@ class SRVis(QMainWindow):
         self.QTscaleMax.returnPressed.connect(self.changeQTscaleMax)
         self.QTHistBlur.stateChanged.connect(self.changeQTBlur)
         self.QTBlurSigma.returnPressed.connect(self.changedSigma)
+        self.scalebar.returnPressed.connect(self.setScalebar)
         
         # Add them to the form layout with a label
         self.form_layout.addRow('Frame:', self.frame)
@@ -150,6 +153,7 @@ class SRVis(QMainWindow):
         self.form_layout.addRow('2D histogram scale min.:', self.QTscaleMin)
         self.form_layout.addRow('Apply gaussian blur:', self.QTHistBlur)
         self.form_layout.addRow('Gaussian blur sigma (in nm):', self.QTBlurSigma)
+        self.form_layout.addRow('Add scalebar (in nm):', self.scalebar)
         
         self.reloadImageButton  = QPushButton('&Update Image Histogram', self)
         self.reloadImageButton.clicked.connect(self.updateImageHistogramData)
@@ -262,7 +266,6 @@ class SRVis(QMainWindow):
         self.plotHistogram.redraw()
         self.statusReady('Updating histograms..')
         return
-            
 
     def pltChange(self, plot):
         self.updateHistogramm()
@@ -462,6 +465,22 @@ class SRVis(QMainWindow):
     
     def changedSigma(self):
         self.sigma = float(self.QTBlurSigma.text()) / (self.pxSize * self.binSize)
+    
+    def setScalebar(self):
+        try:
+            scalebarLength = self.scalebar.text()
+            if str(scalebarLength) == "": # user reset to None
+                scalebarLength = None
+            else:
+                scalebarLength = float(scalebarLength)
+        except:
+            print 'Scalebar input not understood'
+            self.scalebar.setText("")
+            scalebarLength = None
+        
+        if self.initialised: # if not the image doesn't exist yet
+            self.QTHistogram.setScalebarLength(scalebarLength)
+            self.QTHistogram.updateScaleBar(None)
 
     def showData(self, fileNameImage, fnameLocalisations, fnameLocalisationsType, pxSize, CpPh):
         
@@ -472,9 +491,9 @@ class SRVis(QMainWindow):
             return True
         
         ## use for testing
-        baseDirectory = './example/'
-        fileNameImage = baseDirectory + 'SRVis_imageData.tif'
-        fnameLocalisations = baseDirectory + 'SRVis_imageData.txt'
+#        baseDirectory = './example/'
+#        fileNameImage = baseDirectory + 'SRVis_imageData.tif'
+#        fnameLocalisations = baseDirectory + 'SRVis_imageData.txt'
         
         
         self.fileNameImage          = fileNameImage
