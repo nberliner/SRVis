@@ -31,7 +31,7 @@ from matplotlib.backends.backend_qt4agg import FigureCanvasQTAgg as FigureCanvas
 #from matplotlib.backends.backend_qt4agg import NavigationToolbar2QT as NavigationToolbar
 from matplotlib.backends.backend_qt4agg import NavigationToolbar2QT
 
-
+from matplotlib.patches import Rectangle
 from matplotlib.figure import Figure
 from mpl_toolkits.axes_grid1 import make_axes_locatable
 
@@ -89,14 +89,91 @@ class imageHistogramWidget(MyMatplotlibWidget):
         
         self.scaleMin = None
         self.scaleMax = None
+        self.scalebarLength = None
         
         self.im       = None
         self.colorbar = None
+        self.scalebar = None
+        self.scalebarUnit = 100.0 # conversion between pixels und nm
+        self.dataMinX = np.min(data[:,0])
+        self.dataMinY = np.max(data[:,1])
         
         self.get2DHistogram = ImageHistogram()   
+        
+        # Connect the pan/zoom events to the scale bar update
+        self.axes.callbacks.connect('xlim_changed', self.updateScaleBar)
+        self.axes.callbacks.connect('ylim_changed', self.updateScaleBar)
     
     def setData(self, data):
         self.data = data
+    
+    def setScalebarLength(self, length):
+        self.scalebarLength = length
+    
+    def updateScaleBar(self, args):
+        # Remove the old scalebar patch
+        try:
+            self.scalebar.remove()
+        except AttributeError: # Handle the case if the scalebar is not yet drawn
+            pass
+        except ValueError: # this happens if there is no scalebar
+            pass
+
+        if self.scalebarLength == None: # Don't show the scalebar
+            pass
+        else:
+            # Assemble the scalebar            
+            patch = self.setupScalebar(self.scalebarLength)
+            # Add it to the image
+            self.scalebar = self.axes.add_patch( patch )
+
+        # Update the figure
+        self.draw()
+    
+    def setupScalebar(self, length):
+        if length == None: # Don't show a scalebar
+            return None
+            
+        # Check the selected ROI, calculate the units and construct the rectangle that should be plotted
+        xmin, ymin, deltax, deltay = self.axes.viewLim.bounds
+        xmax = xmin + deltax
+        ymax = ymin + deltay
+        
+        # Check which scalebar length should be used
+        scalebarLength = self._getScalebarLength(length)
+        scalebarWidth  = self._getSaclebarWidth(scalebarLength, np.abs((ymax-ymin)))
+
+        # Fix the scalebar at 5% of the bottom left of the view
+        twoPercentX = 0.05 * (xmax - xmin)
+        twoPercentY = 0.05 * (ymax - ymin)
+        
+        # Make sure that the scalebar remains on the image. Otherwise it might
+        # move to the (white) background border and become invisible
+        if self.dataMinX >= xmin:
+            xpos = self.dataMinX + twoPercentX
+        else:
+            xpos = xmin + twoPercentX
+        if self.dataMinY - twoPercentY <= ymin:
+            ypos = self.dataMinY + twoPercentY - scalebarWidth
+        else:
+            ypos = ymin + twoPercentY - scalebarWidth
+            
+        return Rectangle((xpos, ypos), scalebarLength, scalebarWidth, facecolor="white", edgecolor='none')
+    
+    def _getScalebarLength(self, length):
+        # Convert the scalebar from nm to pixels
+        return length / self.scalebarUnit
+    
+    def _getSaclebarWidth(self, scalebarLength, extendY):
+        # Adjust the thickness of the scalebar
+        scalebarWidth  = 0.3 * scalebarLength
+        
+        if scalebarWidth >= 0.1 * extendY:
+            scalebarWidth  = 0.1 * scalebarLength
+        elif scalebarWidth >= 0.05 * extendY:
+            scalebarWidth  = 0.2 * scalebarLength
+            
+        return scalebarWidth
     
     def redraw(self):
 #        self.draw()
