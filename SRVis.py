@@ -37,7 +37,7 @@ matplotlib.rcParams['backend.qt4']='PyQt4'
 # Import program specific classes and functions
 from dataHandler    import dataHandler
 from imageClass     import overlayWidget, dataWidget, imageHistogramWidget
-from SRVisInterface import openDialog, PyMultiPageWidget, messageBox
+from SRVisInterface import openDialog, PyMultiPageWidget
 
 
 class SRVis(QMainWindow):
@@ -63,13 +63,8 @@ class SRVis(QMainWindow):
         self.data          = None
         self.home          = osp.expanduser("~")
         
-        self.binSize       = 1
-        self.scaleMin      = None
-        self.scaleMax      = None
-        self.blurHistogram = False
-        self.sigma         = 1.0
-        self.dataTypes     = list()
-        self.filterValues  = dict()
+        # Initialise some values
+        self._initValues()
         
         self.histogramLayout = None
         
@@ -252,6 +247,15 @@ class SRVis(QMainWindow):
         
         # Set the outerLayout as the window's main layout
         self.setCentralWidget(self.mainWindow)
+    
+    def _initValues(self):
+        self.binSize       = 1
+        self.scaleMin      = None
+        self.scaleMax      = None
+        self.blurHistogram = False
+        self.sigma         = 1.0
+        self.dataTypes     = list()
+        self.filterValues  = dict()
 
     def statusReady(self, msg=None):
         if msg == None:
@@ -493,26 +497,25 @@ class SRVis(QMainWindow):
     
     def clearAll(self):
         # Clear everything to create a fresh view
+        # Clear the input fields
+        self.HistBinSize.clear()
+        self.QTscaleMin.clear()
+        self.QTscaleMax.clear()
+        self.QTHistBlur.setCheckState(Qt.Unchecked)
+        self.QTBlurSigma.clear()
+        self.scalebar.clear()
+        
         # Clear the TIFF image and remove the image histogram
         try:
             self.plotFrame.reset()
-            print 'self.imageOverlay.count()', self.imageOverlay.count()
             if self.imageOverlay.count() == 2: # only remove image histogram widget
-                self.imageOverlay.removePage(2)
+                self.imageOverlay.removePage(1)
+                self.imageOverlay.setCurrentIndex(0)
         except:
             raise
         # Remove the histogram plots
-        try:
-            if self.histogramLayout is not None:
-                print 'Removing histograms'
-                for index in range(self.histogramLayout.count()):
-                    print '  index', index
-                    self.histogramLayout.removePage(index)
-                
-                print 'removed all'
-                print 'self.histogramLayout.count()', self.histogramLayout.count()
-        except:
-            raise
+        self.initialised = self.initaliseShowData()
+        self.pltSelector.clear()
         
         # Reset the filter values
         self.filterValues = dict()
@@ -525,31 +528,29 @@ class SRVis(QMainWindow):
         self.frame.setValue(0)
         self.frameSlider.setValue(0)
         
-        # Clear the input fields
-        self.HistBinSize.clear()
-        self.QTscaleMin.clear()
-        self.QTscaleMax.clear()
-        self.QTHistBlur.setTristate(on=False)
-        self.QTBlurSigma.clear()
-        self.scalebar.clear()
+        # Reset some initial values
+        self._initValues()
 
 
+    def initaliseShowData(self):
+        if self.histogramLayout is not None:
+            self.imageLayout.removeWidget(self.histogramLayout)
+            self.histogramLayout.setParent(None)
+        
+        self.histogramLayout = PyMultiPageWidget(self.pltSelector)
+        self.histogramLayout.currentIndexChanged.connect(self.changedHistogram)
+        self.imageLayout.addWidget(self.histogramLayout)
+        return True
 
     def showData(self, fileNameImage, fnameLocalisations, fnameLocalisationsType, pxSize, CpPh):
-        
-        def initalise():
-            self.histogramLayout = PyMultiPageWidget(self.pltSelector)
-            self.histogramLayout.currentIndexChanged.connect(self.changedHistogram)
-            self.imageLayout.addWidget(self.histogramLayout)
-            return True
-        
+
         # Clear the previous data
         self.clearAll()
         
         ## use for testing
-        baseDirectory = './example/'
-        fileNameImage = baseDirectory + 'SRVis_imageData.tif'
-        fnameLocalisations = baseDirectory + 'SRVis_imageData.txt'
+#        baseDirectory = './example/'
+#        fileNameImage = baseDirectory + 'SRVis_imageData.tif'
+#        fnameLocalisations = baseDirectory + 'SRVis_imageData.txt'
         
         
         self.fileNameImage          = fileNameImage
@@ -585,17 +586,17 @@ class SRVis(QMainWindow):
             self.imageOverlay.addPage(self.QTHistogram, '')
             self.imageOverlay.setCurrentIndex(1)
         else:
-            if not self.initialised:
-                self.initialised = initalise()
+#            if not self.initialised:
+#                self.initialised = self.initaliseShowData()
             self.plotFrame.data = self.data
             self.plotFrame.initialise()
             self.histogramLayout.addPage(self.QTHistogram, '2D Histogram Visualisation')
         
         
-        ## Add the 1D histograms to the data        
-        # Add the number of localisations per frame
-        if not self.initialised:
-            self.initialised = initalise()
+#        ## Add the 1D histograms to the data        
+#        # Add the number of localisations per frame
+#        if not self.initialised:
+#            self.initialised = self.initaliseShowData()
 
         # Add the optional histograms
         locData = self.data.data.localisations()

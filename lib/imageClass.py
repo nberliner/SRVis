@@ -238,6 +238,8 @@ class overlayWidget(MyMatplotlibWidget):
     
     def reset(self):
         self.axes.cla()
+        self.axes.relim()
+        self.axes.autoscale()
 #        self.loc     = None # This creates a problem that the first loc are not removed.. I don't understand why
         self.im      = None
     
