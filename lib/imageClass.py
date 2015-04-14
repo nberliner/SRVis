@@ -236,6 +236,11 @@ class overlayWidget(MyMatplotlibWidget):
         self.lw           = 1
         self.currentFrame = 0
     
+    def reset(self):
+        self.axes.cla()
+#        self.loc     = None # This creates a problem that the first loc are not removed.. I don't understand why
+        self.im      = None
+    
     def updateView(self):
         self.canvas.draw()
         
@@ -253,6 +258,8 @@ class overlayWidget(MyMatplotlibWidget):
         return
 
     def drawFirstImage(self):
+        if self.im is not None: # the image is already initialised
+            return
         imageData = self.data.getImage(0)
         self.im  = self.axes.imshow(imageData, interpolation='none', origin='upper', cmap = plt.cm.Greys_r)
         return
@@ -260,6 +267,8 @@ class overlayWidget(MyMatplotlibWidget):
     def updateImage(self, frame):
         self.currentFrame = frame # update frame
         imageData = self.data.getImage(frame)
+        if self.im is None: # make sure the image is initialised
+            self.drawFirstImage()
         self.im.set_data( imageData )
         return
     
@@ -270,7 +279,8 @@ class overlayWidget(MyMatplotlibWidget):
         
     def updateLocalisations(self, frame):
         X, Y = self.data.getLocalisations(frame)
-        self.loc.remove()
+        if self.loc is not None:
+            self.loc.remove()
         self.loc = self.axes.scatter(x=X, y=Y, facecolors='none', edgecolors='blue', s=self.markerSize, zorder=200)
         return
     

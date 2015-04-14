@@ -71,6 +71,8 @@ class SRVis(QMainWindow):
         self.dataTypes     = list()
         self.filterValues  = dict()
         
+        self.histogramLayout = None
+        
         self.localisationPrecision = 20.0 # assume an initial value of 20nm
         
         self.initialised   = False
@@ -274,12 +276,19 @@ class SRVis(QMainWindow):
     def frameValueChange(self, frame):
         assert( isinstance(frame, int) )
         
+        # Set both input field to the new value
         self.frameSlider.setValue( frame )
+        self.frame.setValue(frame)
+        
+        # Update the image
         try:
             self.plotFrame.redraw(frame)
         except AttributeError: # this happens if there is no raw image specified by the user
             pass
-        self.frame.setValue(frame)
+        except ValueError: # this happens because the self.loc is not set to None.. but doing
+                           # creates another problem. (see imageClass.py)
+            pass
+        
         
     def changeMarkerSize(self):
         try:
@@ -481,6 +490,50 @@ class SRVis(QMainWindow):
         if self.initialised: # if not the image doesn't exist yet
             self.QTHistogram.setScalebarLength(scalebarLength)
             self.QTHistogram.updateScaleBar(None)
+    
+    def clearAll(self):
+        # Clear everything to create a fresh view
+        # Clear the TIFF image and remove the image histogram
+        try:
+            self.plotFrame.reset()
+            print 'self.imageOverlay.count()', self.imageOverlay.count()
+            if self.imageOverlay.count() == 2: # only remove image histogram widget
+                self.imageOverlay.removePage(2)
+        except:
+            raise
+        # Remove the histogram plots
+        try:
+            if self.histogramLayout is not None:
+                print 'Removing histograms'
+                for index in range(self.histogramLayout.count()):
+                    print '  index', index
+                    self.histogramLayout.removePage(index)
+                
+                print 'removed all'
+                print 'self.histogramLayout.count()', self.histogramLayout.count()
+        except:
+            raise
+        
+        # Reset the filter values
+        self.filterValues = dict()
+        
+        # Clear the input fields
+        self.filterMin.clear()
+        self.filterMax.clear()
+        
+        # Reset the frame number
+        self.frame.setValue(0)
+        self.frameSlider.setValue(0)
+        
+        # Clear the input fields
+        self.HistBinSize.clear()
+        self.QTscaleMin.clear()
+        self.QTscaleMax.clear()
+        self.QTHistBlur.setTristate(on=False)
+        self.QTBlurSigma.clear()
+        self.scalebar.clear()
+
+
 
     def showData(self, fileNameImage, fnameLocalisations, fnameLocalisationsType, pxSize, CpPh):
         
@@ -490,10 +543,13 @@ class SRVis(QMainWindow):
             self.imageLayout.addWidget(self.histogramLayout)
             return True
         
+        # Clear the previous data
+        self.clearAll()
+        
         ## use for testing
-#        baseDirectory = './example/'
-#        fileNameImage = baseDirectory + 'SRVis_imageData.tif'
-#        fnameLocalisations = baseDirectory + 'SRVis_imageData.txt'
+        baseDirectory = './example/'
+        fileNameImage = baseDirectory + 'SRVis_imageData.tif'
+        fnameLocalisations = baseDirectory + 'SRVis_imageData.txt'
         
         
         self.fileNameImage          = fileNameImage
