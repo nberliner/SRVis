@@ -119,7 +119,7 @@ class imageHistogramWidget(MyMatplotlibWidget):
         except ValueError: # this happens if there is no scalebar
             pass
 
-        if self.scalebarLength == None: # Don't show the scalebar
+        if self.scalebarLength is None: # Don't show the scalebar
             pass
         else:
             # Assemble the scalebar            
@@ -131,7 +131,7 @@ class imageHistogramWidget(MyMatplotlibWidget):
         self.draw()
     
     def setupScalebar(self, length):
-        if length == None: # Don't show a scalebar
+        if length is None: # Don't show a scalebar
             return None
             
         # Check the selected ROI, calculate the units and construct the rectangle that should be plotted
@@ -187,19 +187,19 @@ class imageHistogramWidget(MyMatplotlibWidget):
         return scaleMin, scaleMax
     
     def plot(self, scaleMin=None, scaleMax=None, binSize=1, blur=True):
-        if self.H == None or self.binSize != binSize or self.scaleMin != scaleMin or self.scaleMax != scaleMax:
+        if self.H is None or self.binSize != binSize or self.scaleMin != scaleMin or self.scaleMax != scaleMax:
             self.binSize = binSize
             self.scaleMin, self.scaleMax = self.calculate2DHistogram(scaleMin, scaleMax, binSize=binSize)
 
 
-        if self.colorbar != None:
+        if self.colorbar is not None:
             # Thanks to: http://stackoverflow.com/a/5265614
             self.fig.delaxes(self.fig.axes[1])
             self.fig.subplots_adjust(right=0.90)
 
         # In order to keep the pan/zoom after updating the image is kept
         # and only the data is updated after the first image has been plotted.
-        if self.im == None:
+        if self.im is None:
             self.im = self.axes.imshow(self.H, extent=self.extent, interpolation='nearest', origin='upper', cmap='gist_heat')
         else:
             self.im.set_data(self.H)
@@ -225,7 +225,7 @@ class overlayWidget(MyMatplotlibWidget):
 
         # Set some axes properties
         self.axes.invert_yaxis() # the origin of the images is in the top left corner
-        if self.data != None:
+        if self.data is not None:
             self.initialise()
         
         # Initialse some variables
@@ -287,7 +287,7 @@ class overlayWidget(MyMatplotlibWidget):
         return
     
     def redraw(self, frame=None):
-        if frame == None:
+        if frame is None:
             frame = self.currentFrame
         assert( isinstance(frame, int) )
         self.updateImage(frame)
@@ -307,7 +307,7 @@ class dataWidget(MyMatplotlibWidget):
         self.toolbar = NavigationToolbar(self, self)
 
         self.data           = data
-        if dataUnfiltered == None:
+        if dataUnfiltered is None:
             self.dataUnfiltered = data
         else:
             self.dataUnfiltered = dataUnfiltered
@@ -338,7 +338,7 @@ class dataWidget(MyMatplotlibWidget):
     
     def plotHistogram(self):
         self.axes.clear()
-        if self.bins == None:
+        if self.bins is None:
             self.bins = 50
         
         ## Plot the data

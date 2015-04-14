@@ -258,7 +258,7 @@ class SRVis(QMainWindow):
         self.filterValues  = dict()
 
     def statusReady(self, msg=None):
-        if msg == None:
+        if msg is None:
             self.statusBar().showMessage('Status: Ready')
         else:
             self.statusBar().showMessage('Status: ' + msg + ' Done')
@@ -369,7 +369,7 @@ class SRVis(QMainWindow):
 
 
     def reloadData(self):
-        if self.data != None:
+        if self.data is not None:
             self.statusBusy('Reloading localisation data..')
             self.data.reloadData('localisations') # Update the localisation data
             
@@ -387,7 +387,7 @@ class SRVis(QMainWindow):
         return
 
     def filterData(self):
-        if self.histogramLayout.getCurrentIndex() == 0 and self.fileNameImage != None: # the QT plot or nr loc per frame
+        if self.histogramLayout.getCurrentIndex() == 0 and self.fileNameImage is not None: # the QT plot or nr loc per frame
             return # do nothing
 
         self.statusBusy('Filtering data..')
@@ -416,14 +416,14 @@ class SRVis(QMainWindow):
         self.updateHistograms()
         try:
             self.plotFrame.redraw()
-        except AttributeError: # this happens if there is no raw image specified by the user
+        except: # errors can happen if there is no raw image specified, the image is not yet initialised etc.
             pass
         self.statusReady('Filtering data..')
     
     def getHistogramIndex(self):
         idx  = self.histogramLayout.getCurrentIndex()
         idxs = range(self.histogramLayout.count()) # the first one is the QT histogram
-        if self.fileNameImage != None:
+        if self.fileNameImage is not None:
             idx -= 1 # Minus one for the image histogram
             idxs = range(1,self.histogramLayout.count()) 
         
@@ -582,7 +582,7 @@ class SRVis(QMainWindow):
         self.QTHistogram.setGaussianBlur(self.blurHistogram, self.sigma) # Update in case the checkbox has been toggled
         self.QTHistogram.plot()
         
-        if self.fileNameImage == None: # no TIFF image available, show the histogram instead
+        if self.fileNameImage is None: # no TIFF image available, show the histogram instead
             self.imageOverlay.addPage(self.QTHistogram, '')
             self.imageOverlay.setCurrentIndex(1)
         else:

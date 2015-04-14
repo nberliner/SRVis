@@ -198,7 +198,7 @@ class PyMultiPageWidget(QWidget):
 
         self.comboBox = comboBox    
         self.stackWidget = QStackedWidget()
-        if self.comboBox != None:
+        if self.comboBox is not None:
             self.comboBox.activated.connect(self.setCurrentIndex)
         self.layout = QVBoxLayout()
         self.layout.addWidget(self.stackWidget)
@@ -225,14 +225,14 @@ class PyMultiPageWidget(QWidget):
         self.stackWidget.insertWidget(index, page)
         title = QCoreApplication.translate('PyMultiPageWidget',title)
         page.setWindowTitle(title)
-        if self.comboBox != None:
+        if self.comboBox is not None:
             self.comboBox.insertItem(index, title)
 
     @pyqtSlot(int)
     def removePage(self, index):
         widget = self.stackWidget.widget(index)
         self.stackWidget.removeWidget(widget)
-        if self.comboBox != None:
+        if self.comboBox is not None:
             self.comboBox.removeItem(index)
 
     def getPageTitle(self):
@@ -254,7 +254,7 @@ class PyMultiPageWidget(QWidget):
     def setCurrentIndex(self, index):
         if index != self.getCurrentIndex():
             self.stackWidget.setCurrentIndex(index)
-            if self.comboBox != None:
+            if self.comboBox is not None:
                 self.comboBox.setCurrentIndex(index)
             self.currentIndexChanged.emit(index)
 
